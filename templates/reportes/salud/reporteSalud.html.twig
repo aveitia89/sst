@@ -1,0 +1,290 @@
+{% extends 'base.html.twig' %}
+{% block stylesheets %}
+    <link href="{{ asset('etecsa/exportarTabla/css/buttons.dataTables.min.css') }}" rel="stylesheet" type="text/css" />
+{% endblock %}
+{% block contenido %}
+<div class="box">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 style="text-align: center">Reportes Salud del trabajador</h1>
+                </div>
+            </div>
+            <br/>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="panel-body col-lg-4">
+                        <a href="#nuevoUser4" data-toggle="modal" class="btn btn-facebook" data-placement="top" title="Ver entregas de espejuelos">Ver entrega de espejuelos por fecha</a>
+                        <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="nuevoUser4" class="modal fade">
+                            <div class="modal-dialog" style="width: 500px; height: auto">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button aria-hidden="true" data-dismiss="modal" class="close" type="button">×
+                                        </button>
+                                        <h4 class="modal-title" style="text-align: center">Entrega por fecha y Unidad Organizativa</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="row">
+                                            <div class="row">
+                                                <div class="col-lg-12">
+                                                    <div class="form-group col-lg-6" id="sandbox-container" style="text-align: center">
+                                                        <label>Fecha Inicio</label>
+                                                        <input style="text-align: center" name="fechaEntrega" type="text" id="fechaEntrega"
+                                                               class="form-control round-input" required="required">
+                                                    </div>
+                                                    <div class="form-group col-lg-6" style="text-align: center">
+                                                        <label>Unidad Organizativa</label>
+                                                        <select class="form-control" name="uoEntrega" id="uoEntrega"
+                                                                required="required">
+                                                            <option value=""></option>
+                                                            {% for uo in unidadOrganizativa %}
+                                                                <option style="text-align: center" value="{{ uo.id }}">{{ uo.nombre }}</option>
+                                                            {% endfor %}
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <button type="submit" class="btn btn-facebook verEntrega">Insertar</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel-body col-lg-5">
+                        <a href="#nuevo1" data-toggle="modal" class="btn btn-facebook" data-placement="top" title="Chequeo Médico por Unidad Organizativa">Pendiente de Chequeos Médicos por Unidada Organizativa</a>
+                        <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="nuevo1" class="modal fade">
+                            <div class="modal-dialog" style="width: 400px; height: auto">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button aria-hidden="true" data-dismiss="modal" class="close" type="button">×
+                                        </button>
+                                        <h4 class="modal-title" style="text-align: center">Chequeo Médico pendiente por Unidad Organizativa</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="row">
+                                            <div class="row">
+                                                <div class="col-lg-12">
+                                                    <div class="form-group col-lg-12" style="text-align: center">
+                                                        <label>Unidad Organizativa</label>
+                                                        <select class="form-control" name="idTD" id="idTD"
+                                                                required="required">
+                                                            <option value=""></option>
+                                                            {% for DT in areas %}
+                                                                <option style="text-align: center" value="{{ DT.id }}">{{ DT.nombre }}</option>
+                                                            {% endfor %}
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <button type="submit" class="btn btn-facebook enviarDatos">Enviar</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel-body col-lg-2">
+                        <a href="#nuevo2" data-toggle="modal" class="btn btn-facebook" data-placement="top" title="Chequeo Médico por rango de fecha">Chequeos Médicos por fecha</a>
+                        <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="nuevo2" class="modal fade">
+                            <div class="modal-dialog" style="width: 650px; height: auto">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button aria-hidden="true" data-dismiss="modal" class="close" type="button">×
+                                        </button>
+                                        <h4 class="modal-title" style="text-align: center">Chequeo Médico por rango de fecha</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="row">
+                                            <div class="row">
+                                                <div class="col-lg-12">
+                                                    <div class="form-group col-lg-12">
+                                                        <label>Rango de Fecha:</label>
+                                                        <div class="input-group">
+                                                            <div class="input-group-addon">
+                                                                <i class="fa fa-calendar"></i>
+                                                            </div>
+                                                            <input name="rangoFecha" id="rangoFecha" type="text" class="form-control pull-right rango">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <button type="submit" class="btn btn-facebook rangoDatos">Enviar</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <!-- Example DataTables Card-->
+                            <div class="box-body listar">
+                                {#<img class="loading3" src="{{ asset('etecsa/img/loadingBig.gif') }}" style="width: 100px;height: 100px; margin-left: 40%; margin-top: 10%; text-align: center">#}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+{% block javascripts %}
+    <script src="{{ asset('etecsa/exportarTabla/js/dataTables.buttons.min.js') }}"></script>
+    <script src="{{ asset('etecsa/exportarTabla/js/buttons.flash.min.js') }}"></script>
+    <script src="{{ asset('etecsa/exportarTabla/js/jszip.min.js') }}"></script>
+    <script src="{{ asset('etecsa/exportarTabla/js/pdfmake.min.js') }}"></script>
+    <script src="{{ asset('etecsa/exportarTabla/js/vfs_fonts.js') }}"></script>
+    <script src="{{ asset('etecsa/exportarTabla/js/buttons.html5.min.js') }}"></script>
+    <script src="{{ asset('etecsa/exportarTabla/js/buttons.print.min.js') }}"></script>
+
+    <script>
+        $(function(){
+            $(".validar").keydown(function(event){
+                //alert(event.keyCode);
+                if((event.keyCode < 48 || event.keyCode > 57) && (event.keyCode < 96 || event.keyCode > 105) && event.keyCode !==190  && event.keyCode !==110 && event.keyCode !==8 && event.keyCode !==9  ){
+                    return false;
+                }
+            });
+        });
+    </script>
+
+    <script>
+        $(".verEntrega").click(function(event){
+            var iduo = document.getElementById("uoEntrega").value;
+            var fecha = document.getElementById("fechaEntrega").value;
+
+            var path ='{{ path("verEntrega", {'iduo': 'xx','fecha': 'xx'}) }}';
+            path = path.replace("xx", iduo);
+            path = path.replace("xx", fecha);
+
+            $.ajax({
+                url : path,
+                data : {},
+                type : 'POST',
+                dataType : '',
+                success : function(data) {
+                    $("#nuevoUser4").modal('hide');
+                    $('.listar').html(data);
+                },
+                error : function(data) {
+                    alert("Error");
+                },
+            });
+        });
+    </script>
+    <script>
+        {{ parent() }}
+        $(document).ready(function() {
+            fechitas();
+            function fechitas() {
+                $('.rango').daterangepicker({
+                    "autoApply": true,
+                    autoclose: true,
+                    language: "es",
+                    "locale": {
+                        "format": "DD.MM.YYYY",
+                        "separator": "-",
+                        "applyLabel": "Apply",
+                        "cancelLabel": "Cancel",
+                        "fromLabel": "From",
+                        "toLabel": "To",
+                        "customRangeLabel": "Custom",
+                        "weekLabel": "W",
+                        "daysOfWeek": [
+                            "Do",
+                            "Lu",
+                            "Ma",
+                            "Mi",
+                            "Ju",
+                            "Vi",
+                            "Sa"
+                        ],
+                        "monthNames": [
+                            "Enero",
+                            "Febrero",
+                            "Marzo",
+                            "Abril",
+                            "Mayo",
+                            "Junio",
+                            "Julio",
+                            "Agosto",
+                            "Septiembre",
+                            "Octubre",
+                            "Noviembre",
+                            "Diciembre"
+                        ],
+                        "firstDay": 0
+                    },
+
+                    "startDate": "{{  "now" | date("d/m/Y") }}",
+                    "endDate": "{{ "now" | date("d/m/Y") }}",
+                    "opens": "center",
+                    "drops": "down"
+                },)
+            };
+        });
+    </script>
+    <script>
+        $(".enviarDatos").click(function (event) {
+            var idTD = document.getElementById("idTD").value;
+            var path ='{{ path("chequeoDT", {'idTD': 'xx'}) }}';
+            path = path.replace("xx", idTD);
+            $.ajax({
+                url : path,
+                data : {},
+                type : 'POST',
+                dataType : '',
+                success : function(data) {
+                    $("#nuevo1").modal('hide');
+                    $('.listar').html(data);
+                },
+                error : function(data) {
+                    alert("Error");
+                },
+            });
+        });
+    </script>
+    <script>
+        $(".rangoDatos").click(function(event){
+            var rangoFecha = document.getElementById("rangoFecha").value;
+
+            var path ='{{ path("rangoFechaChequeo", {'rangoFecha': 'xx'}) }}';
+            path = path.replace("xx", rangoFecha);
+
+            $.ajax({
+                url : path,
+                data : {},
+                type : 'POST',
+                dataType : '',
+                success : function(data) {
+                    $("#nuevo2").modal('hide');
+                    $('.listar').html(data);
+                },
+                error : function(data) {
+                    alert("Error");
+                },
+                complete : function(data) {
+                    // swal({
+                    //     position: 'top-end',
+                    //     icon: 'success',
+                    //     title: 'Se ha insertado correctamente.',
+                    //     showConfirmButton: false,
+                    //     timer: 1500,
+                    //     type: "success",
+                    //     showCancelButton: false,
+                    //     closeOnConfirm: true
+                    // })
+                }
+            });
+        });
+    </script>
+{% endblock %}

@@ -1,0 +1,134 @@
+{% extends 'base.html.twig' %}
+{% block stylesheets %}
+    <link href="{{ asset('etecsa/exportarTabla/css/buttons.dataTables.min.css') }}" rel="stylesheet" type="text/css" />
+{% endblock %}
+{% block contenido %}
+    <div class="box">
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <h1 style="text-align: center">Registrar Vacunación</h1>
+                    </div>
+                </div>
+                <br/>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="panel-body col-lg-3">
+                            <a href="#nuevoUser" data-toggle="modal" class="btn btn-facebook" data-placement="top" title="Registrar vacunación">Registrar vacunación</a>
+                            <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="nuevoUser" class="modal fade">
+                                <div class="modal-dialog" style="width: 500px; height: auto">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button aria-hidden="true" data-dismiss="modal" class="close" type="button">×
+                                            </button>
+                                            <h4 class="modal-title" style="text-align: center">Registrar vacunación</h4>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="row">
+                                                <div class="row">
+                                                    <div class="col-lg-12">
+                                                        <div class="form-group col-lg-6">
+                                                            <label>Trabajador</label>
+                                                            <select class="form-control" name="trabajador" id="trabajador" required="required">
+                                                                <option value="">Seleccionar</option>
+                                                                {% for trab in trabajadores %}
+                                                                    <option style="text-align: center" value="{{ trab.id }}">{{ trab.nombre }} {{ trab.apellidos }} {{ trab.segundoApellido }}</option>
+                                                                {% endfor %}
+                                                            </select>
+                                                        </div>
+                                                        <div class="form-group col-lg-6" >
+                                                            <label>Vacuna aplicada</label>
+                                                            <select class="form-control" name="vacunas" id="vacunas" required="required">
+                                                                <option value="">Seleccionar</option>
+                                                                {% for vacuna in vacunas %}
+                                                                    <option style="text-align: center" value="{{ vacuna.id }}">{{ vacuna.nombreVacuna }}</option>
+                                                                {% endfor %}
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-12">
+                                                        <div class="form-group col-lg-6" id="sandbox-container" >
+                                                            <label>Fecha de aplicación</label>
+                                                            <input style="text-align: center" name="fechaAplicacion" type="text" id="fechaAplicacion"
+                                                                   class="form-control round-input" required="required">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <button type="submit" class="btn btn-facebook insertar">Insertar</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <!-- Example DataTables Card-->
+                                <div class="box-body listar">
+                                    <img class="loading3" src="{{ asset('etecsa/img/loadingBig.gif') }}" style="width: 100px;height: 100px; margin-left: 40%; margin-top: 10%; text-align: center">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block javascripts %}
+    <script src="{{ asset('etecsa/exportarTabla/js/dataTables.buttons.min.js') }}"></script>
+    <script src="{{ asset('etecsa/exportarTabla/js/buttons.flash.min.js') }}"></script>
+    <script src="{{ asset('etecsa/exportarTabla/js/jszip.min.js') }}"></script>
+    <script src="{{ asset('etecsa/exportarTabla/js/pdfmake.min.js') }}"></script>
+    <script src="{{ asset('etecsa/exportarTabla/js/vfs_fonts.js') }}"></script>              
+    <script src="{{ asset('etecsa/exportarTabla/js/buttons.html5.min.js') }}"></script>
+    <script src="{{ asset('etecsa/exportarTabla/js/buttons.print.min.js') }}"></script>
+<script>
+    $.post("{{ path('controlVAjax')}}", function (data) {
+        $('.listar').html(data);
+    });
+</script>
+<script>
+    $(".insertar").click(function(event){
+        var idtrabajador = document.getElementById("trabajador").value;
+        var idvacuna = document.getElementById("vacunas").value;
+        var fecha = document.getElementById("fechaAplicacion").value;
+
+        var path ='{{ path("registrarVtrabajador", {'idtrabajador': 'xx','idvacuna': 'xx','fecha': 'xx'}) }}';
+        path = path.replace("xx", idtrabajador);
+        path = path.replace("xx", idvacuna);
+        path = path.replace("xx", fecha);
+
+        $.ajax({
+            url : path,
+            data : {},
+            type : 'POST',
+            dataType : '',
+            success : function(data) {
+                $('.listar').html(data);
+                $("#nuevoUser").modal('hide');
+            },
+            error : function(data) {
+                alert("Error");
+            },
+            complete : function(data) {
+                swal({
+                    position: 'top-end',
+                    icon: 'success',
+                    title: 'Se ha insertado correctamente',
+                    showConfirmButton: false,
+                    timer: 1500,
+                    type: "success",
+                    showCancelButton: false,
+                    closeOnConfirm: true
+                })
+            }
+        });
+    });
+</script>
+{% endblock %}

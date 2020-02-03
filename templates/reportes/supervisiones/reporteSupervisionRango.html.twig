@@ -1,0 +1,303 @@
+{% extends 'base.html.twig' %}
+{% block stylesheets %}
+    <link href="{{ asset('etecsa/exportarTabla/css/buttons.dataTables.min.css') }}" rel="stylesheet" type="text/css" />
+{% endblock %}
+{% block contenido %}
+    <div class="box">
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <h1 style="text-align: center">Reportes Supervisión</h1>
+                    </div>
+                </div>
+                <br/>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="panel-body col-lg-2">
+                            <a href="{{ path('listadoDT') }}" data-toggle="modal" class="btn btn-facebook listado" data-placement="top" title="Listado de riesgos y medidas identificadas por Unidad Organizativa.">Riesgo</a>
+                        </div>
+                        <div class="panel-body col-lg-2">
+                            <a href="{{path('tipoExterna')}}" data-toggle="modal" class="btn btn-facebook" data-placement="top" title="Informe de inspecciones externas de seguridad y salud del trabajo">Inspecciones</a>
+                        </div>
+                        <div class="panel-body col-lg-2">
+                            <a href="{{ path('peligrosidadDT') }}" data-toggle="modal" class="btn btn-facebook listado" data-placement="top" title="Unidades organizativas con más peligrosidad según riesgos laborales.">Peligrosidad</a>
+                        </div>
+                        <div class="panel-body col-lg-2">
+                            <a href="#nuevo" data-toggle="modal" class="btn btn-facebook listado" data-placement="top" title="Informe de las supervisiones de seguridad y salud por rango de fecha según la Unidad Organizativa.">Rango Fecha</a>
+                            <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="nuevo" class="modal fade">
+                                <div class="modal-dialog" style="width: 650px; height: auto">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button aria-hidden="true" data-dismiss="modal" class="close" type="button">×
+                                            </button>
+                                            <h4 class="modal-title" style="text-align: center">Informe de las supervisiones de seguridad y salud</h4>
+                                        </div>
+                                        <div class="modal-body">
+                                            <form role="form" method="post" action="{{ path('rangoFechaSupervision') }}" enctype="multipart/form-data">
+                                                <div class="row">
+                                                    <div class="row">
+                                                        <div class="col-lg-12">
+                                                            <div class="form-group col-lg-6" style="text-align: center">
+                                                                <label>Unidad Organizativa</label>
+                                                                <select class="form-control" name="idTD" id="idTD"
+                                                                        required="required">
+                                                                    <option value="">Seleccionar</option>
+                                                                    {% for DT in area %}
+                                                                        <option style="text-align: center" value="{{ DT.id }}">{{ DT.nombre }}</option>
+                                                                    {% endfor %}
+                                                                </select>
+                                                            </div>
+                                                            <div class="form-group col-lg-6">
+                                                                <label>Rango de Fecha:</label>
+                                                                <div class="input-group">
+                                                                    <div class="input-group-addon">
+                                                                        <i class="fa fa-calendar"></i>
+                                                                    </div>
+                                                                    <input name="rangoFecha" id="rangoFecha" type="text" class="form-control pull-right rango">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <button type="submit" class="btn btn-facebook">Enviar</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <!-- Example DataTables Card-->
+                                <div class="box-body listar">
+                                    <table id="dataTable" style="font-size: 85%" class="table table-striped table-bordered table-hover table-responsive" cellspacing="0">
+                                        <thead>
+                                        <tr>
+                                            <th style="width: 14%;text-align: center"><i class="icon_profile"></i>ID</th>
+                                            <th style="width: 14%;text-align: center"><i class="icon_profile"></i>Tipo</th>
+                                            <th style="width: 14%;text-align: center"><i class="icon_profile"></i>Fecha</th>
+                                            <th style="width: 14%;text-align: center"><i class="icon_profile"></i>U/O</th>
+                                            <th style="width: 14%;text-align: center"><i class="icon_profile"></i>Area U/O</th>
+                                            {#<th style="width: 14%;text-align: center"><i class="icon_profile"></i>Peligro</th>#}
+                                            <th style="width: 14%;text-align: center"><i class="icon_profile"></i>Reisgo</th>
+                                            <th style="width: 14%;text-align: center"><i class="icon_profile"></i>Medidas</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% for super in supervision %}
+                                            <tr>
+                                                <td style="width: 14%;text-align: center">{{ super.id }}</td>
+                                                <td style="width: 14%;text-align: center">{{ super.idnivel.nivel }}</td>
+                                                <td style="width: 14%;text-align: center">{{ super.fecha | date('d/m/Y') }}</td>
+                                                <td style="width: 14%;text-align: center">{{ super.idarea.nombre }}</td>
+                                                <td style="width: 14%;text-align: center">{{ super.idUO.nombre }}</td>
+                                                {#<td style="width: 14%;text-align: center">{{ super.nombre }}</td>#}
+                                                {% if super.riesgos != null %}
+                                                    <td style="width: 14%;text-align: center">
+                                                        <a href="#Modal-{{ super.id }}" data-toggle="modal" data-placement="top" title="Ver Riesgos"><i class="btn btn-facebook fa fa-street-view"></i></a>
+                                                        <div aria-hidden="true" aria-labelledby="ModalLabel" role="dialog" tabindex="-1" id="Modal-{{ super.id }}" class="modal fade">
+                                                            <div class="modal-dialog" style="width: 780px; height: auto">
+                                                                <div class="modal-content">
+                                                                    <div class="modal-header">
+                                                                        <button aria-hidden="true" data-dismiss="modal" class="close" type="button">×
+                                                                        </button>
+                                                                        <h4 class="modal-title" style="text-align: center">Riesgos</h4>
+                                                                    </div>
+                                                                    <div class="modal-body">
+                                                                        <div class="row">
+                                                                            <div class="row">
+                                                                                <div class="col-lg-12">
+                                                                                    <div class="form-group col-lg-12" style="text-align: center">
+                                                                                        <table style="font-size: 95%" class="table table-striped table-bordered table-hover table-responsive" cellspacing="0">
+                                                                                            <thead>
+                                                                                            <tr>
+                                                                                                <th style="width: 14%;text-align: center"><i class="icon_profile"></i>Riesgo</th>
+                                                                                                <th style="width: 14%;text-align: center"><i class="icon_profile"></i>Probabilidad</th>
+                                                                                                <th style="width: 14%;text-align: center"><i class="icon_profile"></i>Severidad</th>
+                                                                                            </tr>
+                                                                                            </thead>
+                                                                                            <tbody>
+                                                                                            {% for riesgo in super.riesgos %}
+                                                                                                <tr>
+                                                                                                    <td>{{riesgo.descripcion}}</td>
+                                                                                                    <td>{{riesgo.idprobabilidad.descripcion}}</td>
+                                                                                                    <td>{{riesgo.idseveridad.descripcion}}</td>
+                                                                                                </tr>
+                                                                                            {% endfor %}
+                                                                                            </tbody>
+                                                                                        </table>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                {% else %}
+                                                    <td></td>
+                                                {% endif %}
+                                                {% if super.planDeMedidas != null %}
+                                                    <td style="width: 14%;text-align: center">
+                                                        <a href="#ModalM-{{ super.id }}" data-toggle="modal" data-placement="top" title="Ver Riesgos"><i class="btn btn-facebook fa fa-bullhorn"></i></a>
+                                                        <div aria-hidden="true" aria-labelledby="ModalLabel" role="dialog" tabindex="-1" id="ModalM-{{ super.id }}" class="modal fade">
+                                                            <div class="modal-dialog" style="width: 650px; height: auto">
+                                                                <div class="modal-content">
+                                                                    <div class="modal-header">
+                                                                        <button aria-hidden="true" data-dismiss="modal" class="close" type="button">×
+                                                                        </button>
+                                                                        <h4 class="modal-title" style="text-align: center">Medidas</h4>
+                                                                    </div>
+                                                                    <div class="modal-body">
+                                                                        <div class="row">
+                                                                            <div class="row">
+                                                                                <div class="col-lg-12">
+                                                                                    <div class="form-group col-lg-12" style="text-align: center">
+                                                                                        <table style="font-size: 95%" class="table table-striped table-bordered table-hover table-responsive" cellspacing="0">
+                                                                                            <thead>
+                                                                                            <tr>
+                                                                                                <th style="width: 14%;text-align: center"><i class="icon_profile"></i>Riesgo</th>
+                                                                                                <th style="width: 14%;text-align: center"><i class="icon_profile"></i>Medida</th>
+                                                                                                <th style="width: 14%;text-align: center"><i class="icon_profile"></i>Peligro</th>
+                                                                                                <th style="width: 14%;text-align: center"><i class="icon_profile"></i>Clasificación</th>
+                                                                                                <th style="width: 14%;text-align: center"><i class="icon_profile"></i>Fecha Cumplimiento</th>
+                                                                                                <th style="width: 14%;text-align: center"><i class="icon_profile"></i>Cumplimiento</th>
+                                                                                            </tr>
+                                                                                            </thead>
+                                                                                            <tbody>
+                                                                                            {% for plan in super.planDeMedidas %}
+                                                                                                <tr>
+                                                                                                    {% if plan.idRiesgo != null %}
+                                                                                                        <td>{{plan.idRiesgo.descripcion}}</td>
+                                                                                                    {% else %}
+                                                                                                        <td></td>
+                                                                                                    {% endif %}
+                                                                                                    <td>{{plan.medida}}</td>
+                                                                                                    <td>{{plan.peligros}}</td>
+                                                                                                    <td>{{plan.clasificacion}}</td>
+                                                                                                    <td>{{plan.fechaCumplimiento | date('d/m/Y')}}</td>
+                                                                                                    {% if plan.estado == true %}
+                                                                                                        <td>Cumplido</td>
+                                                                                                    {% else %}
+                                                                                                        <td>No Cumplido</td>
+                                                                                                    {% endif %}
+                                                                                                </tr>
+                                                                                            {% endfor %}
+                                                                                            </tbody>
+                                                                                        </table>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                {% else %}
+                                                    <td></td>
+                                                {% endif %}
+                                            </tr>
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block javascripts %}
+    <script src="{{ asset('etecsa/exportarTabla/js/dataTables.buttons.min.js') }}"></script>
+    <script src="{{ asset('etecsa/exportarTabla/js/buttons.flash.min.js') }}"></script>
+    <script src="{{ asset('etecsa/exportarTabla/js/jszip.min.js') }}"></script>
+    <script src="{{ asset('etecsa/exportarTabla/js/pdfmake.min.js') }}"></script>
+    <script src="{{ asset('etecsa/exportarTabla/js/vfs_fonts.js') }}"></script>
+    <script src="{{ asset('etecsa/exportarTabla/js/buttons.html5.min.js') }}"></script>
+    <script src="{{ asset('etecsa/exportarTabla/js/buttons.print.min.js') }}"></script>
+    <script>
+        $(document).ready(function () {
+            var t = $('#dataTable').DataTable({
+                dom: 'Bfrtip',
+                buttons: [
+                    /*'copy', 'csv',*/ 'excel', 'pdf', 'print'
+                ],
+                /*"bSort" : false,*/
+                "language": {
+                    "infoFiltered": " - filtering from _MAX_ filas",
+                    "lengthMenu": "Registros: _MENU_  ",
+                    "sSearch": "Buscar:",
+                    "sInfo": "Registros del _START_ al _END_ de un total de _TOTAL_ registros",
+                    "Info": false,
+                    "oPaginate": {
+                        "sFirst": "Primero",
+                        "sLast": "Último",
+                        "sNext": "Siguiente",
+                        "sPrevious": "Anterior"
+                    },
+                }
+            });
+        });
+    </script>
+    <script>
+        {{ parent() }}
+        $(document).ready(function() {
+            fechitas();
+            function fechitas() {
+                $('.rango').daterangepicker({
+                    "autoApply": true,
+                    autoclose: true,
+                    language: "es",
+                    "locale": {
+                        "format": "DD.MM.YYYY",
+                        "separator": "-",
+                        "applyLabel": "Apply",
+                        "cancelLabel": "Cancel",
+                        "fromLabel": "From",
+                        "toLabel": "To",
+                        "customRangeLabel": "Custom",
+                        "weekLabel": "W",
+                        "daysOfWeek": [
+                            "Do",
+                            "Lu",
+                            "Ma",
+                            "Mi",
+                            "Ju",
+                            "Vi",
+                            "Sa"
+                        ],
+                        "monthNames": [
+                            "Enero",
+                            "Febrero",
+                            "Marzo",
+                            "Abril",
+                            "Mayo",
+                            "Junio",
+                            "Julio",
+                            "Agosto",
+                            "Septiembre",
+                            "Octubre",
+                            "Noviembre",
+                            "Diciembre"
+                        ],
+                        "firstDay": 0
+                    },
+
+                    "startDate": "{{  "now" | date("d/m/Y") }}",
+                    "endDate": "{{ "now" | date("d/m/Y") }}",
+                    "opens": "center",
+                    "drops": "down"
+                },)
+            };
+        });
+    </script>
+{% endblock %}

@@ -1,0 +1,113 @@
+{% extends 'base.html.twig' %}
+{% block stylesheets %}
+    <link href="{{ asset('etecsa/exportarTabla/css/buttons.dataTables.min.css') }}" rel="stylesheet" type="text/css" />
+{% endblock %}
+{% block contenido %}
+    <div class="box">
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <h1 style="text-align: center">Gestión de Unidades Organizativa</h1>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="panel-body col-lg-12">
+                            <a href="#nuevoUser" data-toggle="modal" class="btn btn-facebook" data-placement="top" title="Insertar nuevo usuario">Insertar Unidad Organizativa</a>
+                            <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="nuevoUser" class="modal fade">
+                                <div class="modal-dialog" style="width: 500px; height: auto">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button aria-hidden="true" data-dismiss="modal" class="close" type="button">×
+                                            </button>
+                                            <h4 class="modal-title" style="text-align: center">Insertar Unidad Organizativa</h4>
+                                        </div>
+                                        <div class="modal-body">
+                                            {#<form role="form" action="{{ path('crearUser') }}" method="post" enctype="multipart/form-data"></form>#}
+                                            <div class="row">
+                                                <div class="col-lg-12">
+                                                    <div class="form-group col-lg-6" style="text-align: center">
+                                                        <label>Unidad Organizativa</label>
+                                                        <input style="text-align: center" name="uonombre" type="text"
+                                                               id="uonombre" class="form-control round-input"
+                                                               required="required">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-lg-12">
+                                                    <button type="submit" class="btn btn-facebook insertar">Insertar</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <!-- Example DataTables Card-->
+                                <div class="box-body listarUser">
+                                    <img class="loading3" src="{{ asset('etecsa/img/loadingBig.gif') }}" style="width: 100px;height: 100px; margin-left: 40%; margin-top: 10%; text-align: center">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block javascripts %}
+    <script src="{{ asset('etecsa/exportarTabla/js/dataTables.buttons.min.js') }}"></script>
+    <script src="{{ asset('etecsa/exportarTabla/js/buttons.flash.min.js') }}"></script>
+    <script src="{{ asset('etecsa/exportarTabla/js/jszip.min.js') }}"></script>
+    <script src="{{ asset('etecsa/exportarTabla/js/pdfmake.min.js') }}"></script>
+    <script src="{{ asset('etecsa/exportarTabla/js/vfs_fonts.js') }}"></script>              
+    <script src="{{ asset('etecsa/exportarTabla/js/buttons.html5.min.js') }}"></script>
+    <script src="{{ asset('etecsa/exportarTabla/js/buttons.print.min.js') }}"></script>
+    <script>
+        $.post("{{ path('unidadOAjax')}}", function (data) {
+            $('.listarUser').html(data);
+        });
+    </script>
+    <script>
+        $(".insertar").click(function(event){
+            var nombre = document.getElementById("uonombre").value;
+
+            var path ='{{ path("uoInsertar", {'nombre': 'xx',}) }}';
+            path = path.replace("xx", nombre);
+
+            $.ajax({
+                url : path,
+                data : {},
+                type : 'POST',
+                dataType : '',
+                success : function(data) {
+                    $('.listarUser').html(data);
+                },
+                error : function(data) {
+                    alert("Error");
+                },
+                complete : function(data) {
+                    swal({
+                        position: 'top-end',
+                        icon: 'success',
+                        title: 'Se ha insertado correctamente.',
+                        showConfirmButton: false,
+                        timer: 1500,
+                        type: "success",
+                        showCancelButton: false,
+                        closeOnConfirm: true
+                    })
+                    $("#nuevoUser").modal('hide');
+                }
+            });
+        });
+    </script>
+{% endblock %}

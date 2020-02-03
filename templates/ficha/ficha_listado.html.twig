@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+{% block stylesheets %}
+    <link href="{{ asset('etecsa/exportarTabla/css/buttons.dataTables.min.css') }}" rel="stylesheet" type="text/css" />
+{% endblock %}
+{% block contenido %}
+    <div class="row">
+        <div class="col-md-12">
+            <br>
+            <h2>Ficha de los trabajadores</h2>
+            <br>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box-body listar">
+                <img class="loading3" src="{{ asset('etecsa/img/loadingBig.gif') }}" style="width: 100px;height: 100px; margin-left: 40%; margin-top: 10%; text-align: center">
+            </div>
+            <!--End Advanced Tables -->
+        </div>
+    </div>
+{% endblock %}
+{% block javascripts %}
+    <script src="{{ asset('etecsa/exportarTabla/js/dataTables.buttons.min.js') }}"></script>
+    <script src="{{ asset('etecsa/exportarTabla/js/buttons.flash.min.js') }}"></script>
+    <script src="{{ asset('etecsa/exportarTabla/js/jszip.min.js') }}"></script>
+    <script src="{{ asset('etecsa/exportarTabla/js/pdfmake.min.js') }}"></script>
+    <script src="{{ asset('etecsa/exportarTabla/js/vfs_fonts.js') }}"></script>              
+    <script src="{{ asset('etecsa/exportarTabla/js/buttons.html5.min.js') }}"></script>
+    <script src="{{ asset('etecsa/exportarTabla/js/buttons.print.min.js') }}"></script>
+    
+    <script>
+        $.post("{{ path('listarFichaAjax')}}", function (data) {
+            $('.listar').html(data);
+        });
+    </script>
+{% endblock %}

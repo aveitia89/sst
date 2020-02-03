@@ -1,0 +1,325 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <link href="{{asset('vendor/metisMenu/dist/metisMenu.css')}}"rel="stylesheet" type="text/css" />    
+    <link href="{{asset('vendor/animate.css/animate.css')}}"rel="stylesheet" type="text/css" />    
+    <link href="{{asset('fonts/pe-icon-7-stroke/css/pe-icon-7-stroke.css')}}"rel="stylesheet" type="text/css" />    
+    <link href="{{asset('fonts/pe-icon-7-stroke/css/helper.css')}}"rel="stylesheet" type="text/css" />    
+    <link href="{{asset('vendor/style.css')}}"rel="stylesheet" type="text/css" />    
+    {#     <link href="{{asset('')}}"rel="stylesheet" type="text/css" />    #}
+    <br>
+    <br>
+
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="hpanel">
+                <div class="panel-heading">
+                    {#<div class="panel-tools">
+                        <a class="showhide"><i class="fa fa-chevron-up"></i></a>
+                        <a class="closebox"><i class="fa fa-times"></i></a>
+                    </div>#}
+                    Unidades Organizativas
+                </div>
+                <div class="panel-body">
+
+                    {#<p class="m-b-lg">
+                        Al selecionar una unidad se muestran diferentes  .
+                    </p>#}
+
+                    <div class="dd" id="nestable2">
+                        <ol class="dd-list">
+                            <li class="dd-item" data-id="1">
+                                <div class="dd-handle">
+                                    <span class="label h-bg-navy-blue"><i class="fa fa-users"></i></span> Cras ornare tristique.
+                                </div>
+                                <ol class="dd-list">
+                                    <li class="dd-item" data-id="2">
+                                        <div class="dd-handle">
+                                            <span class="pull-right"> 12:00 pm </span>
+                                            <span class="label h-bg-navy-blue"><i class="fa fa-cog"></i></span> Vivamus vestibulum nulla nec ante.
+                                        </div>
+                                    </li>
+                                    <li class="dd-item" data-id="3">
+                                        <div class="dd-handle">
+                                            <span class="pull-right"> 11:00 pm </span>
+                                            <span class="label h-bg-navy-blue"><i class="fa fa-bolt"></i></span> Nunc dignissim risus id metus.
+                                        </div>
+                                    </li>
+                                    <li class="dd-item" data-id="4">
+                                        <div class="dd-handle">
+                                            <span class="pull-right"> 11:00 pm </span>
+                                            <span class="label h-bg-navy-blue"><i class="fa fa-laptop"></i></span> Vestibulum commodo
+                                        </div>
+                                    </li>
+                                </ol>
+                            </li>
+
+                            <li class="dd-item" data-id="5">
+                                <div class="dd-handle">
+                                    <span class="label h-bg-navy-blue"><i class="fa fa-users"></i></span> Integer vitae libero.
+                                </div>
+                                <ol class="dd-list">
+                                    <li class="dd-item" data-id="6">
+                                        <div class="dd-handle">
+                                            <span class="pull-right"> 15:00 pm </span>
+                                            <span class="label h-bg-navy-blue"><i class="fa fa-users"></i></span> Nam convallis pellentesque nisl.
+                                        </div>
+                                    </li>
+                                    <li class="dd-item" data-id="7">
+                                        <div class="dd-handle">
+                                            <span class="pull-right"> 16:00 pm </span>
+                                            <span class="label h-bg-navy-blue"><i class="fa fa-bomb"></i></span> Vivamus molestie gravida turpis
+                                        </div>
+                                    </li>
+                                    <li class="dd-item" data-id="8">
+                                        <div class="dd-handle">
+                                            <span class="pull-right"> 21:00 pm </span>
+                                            <span class="label h-bg-navy-blue"><i class="fa fa-child"></i></span> Ut aliquam sollicitudin leo.
+                                        </div>
+                                    </li>
+                                </ol>
+                            </li>
+                        </ol>
+                    </div>
+                    {# <div class="m-t-md">
+                         <h5>Serialised Output</h5>
+                     </div>
+                     <textarea id="nestable2-output" class="form-control"></textarea>#}
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <hr>
+    <div class="row">
+        <div class="col-md-12">
+            <!-- Advanced Tables -->
+            <div class="hpanel">
+                
+                 <div class="panel-heading">
+                    <div class="panel-tools">
+                        <a class="showhide"><i class="fa fa-chevron-up"></i></a>
+{#                        <a class="closebox"><i class="fa fa-times"></i></a>#}
+                    </div>
+                    Permisos Seguridad
+                </div>
+                <div class="panel-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-bordered table-hover" id="dataTables-permiso">
+                            <thead>
+                                <tr>
+                                    <th>Responsable que ordena</th>
+                                    <th>Cargo responsable que ordena</th>
+                                    <th>Responsable que ejecuta</th>
+                                    <th>Cargo resonsable que ejecuta </th>
+                                    <th>Descripcion del trabajo</th>
+                                    <th>Lugar de ejecucion</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for permisoSeguridad in permisoSeguridads %}
+                                    <tr class="gradeU">
+                                        <td>{{ instance.getTrabajador(permisoSeguridad.idResponsableQueOrdena).nombre }}</td>
+                                        <td>{{ instance.getTrabajador(permisoSeguridad.idResponsableQueOrdena).posicion }}</td>
+                                        <td>{{instance.getTrabajador(permisoSeguridad.idResponsableEjecuta).nombre }}</td>
+                                        <td>{{ instance.getTrabajador(permisoSeguridad.idResponsableEjecuta).posicion }}</td>
+                                        <td>{{ permisoSeguridad.descrionTrabajo }}</td>
+                                        <td>{{ permisoSeguridad.lugarEjecucion }}</td>
+                                        <td> <a href="{{ path('permisoseguridad_edit', { 'id': permisoSeguridad.id }) }}" class="btn btn-info fa fa-edit" style="background: #1C81D9;"></a>
+                                            <a href="{{ path('permisoseguridad_delete', { 'id': permisoSeguridad.id }) }}" class="btn btn-default fa fa-trash"></a>
+                                            <a href="#" class="btn btn-default fa fa-print"></a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+            <!--End Advanced Tables -->
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block stylesheets %}
+    <script src="{{asset('vendor/jquery/dist/jquery.min.js')}}"></script>
+    <script src="{{asset('vendor/jquery-ui/jquery-ui.min.js')}}"></script>
+    <script src="{{asset('vendor/sparkline/index.js')}}"></script>
+    <script src="{{asset('vendor/peity/jquery.peity.min.js')}}"></script>
+    <script src="{{asset('vendor/iCheck/icheck.min.js')}}"></script>
+    <script src="{{asset('vendor/metisMenu/dist/metisMenu.min.js')}}"></script>
+    <script src="{{asset('vendor/jquery.flot.spline/index.js')}}"></script>
+    <script src="{{asset('vendor/jquery-flot/jquery.flot.resize.js')}}"></script>
+    <script src="{{asset('vendor/jquery-flot/jquery.flot.pie.js')}}"></script>
+    <script src="{{asset('vendor/flot.curvedlines/curvedLines.js')}}"></script>
+    <script src="{{asset('vendor/jquery-flot/jquery.flot.js')}}"></script>
+    {#<script src="{{asset('vendor/bootstrap/dist/js/bootstrap.min.js')}}"></script>#}
+    <script src="{{asset('vendor/slimScroll/jquery.slimscroll.min.js')}}"></script>
+
+    <script src="{{asset('styles/js/charts.js')}}"></script>
+    <script src="{{asset('vendor/homer.js')}}"></script>
+    <script src="{{asset('vendor/charts.js')}}"></script>
+    {#<script src="{{asset('')}}"></script>#}
+
+    <script>
+        $(function () {
+
+            /**
+             * Flot charts line data and options
+             */
+            var chartIncomeData = [
+                {
+                    label: "line",
+                    data: [[1, 10], [2, 26], [3, 16], [4, 36], [5, 32], [6, 51]]
+                }
+            ];
+
+            var chartIncomeOptions = {
+                series: {
+                    lines: {
+                        show: true,
+                        lineWidth: 0,
+                        fill: true,
+                        fillColor: "#64cc34"
+
+                    }
+                },
+                colors: ["#62cb31"],
+                grid: {
+                    show: false
+                },
+                legend: {
+                    show: false
+                }
+            };
+
+            $.plot($("#flot-income-chart"), chartIncomeData, chartIncomeOptions);
+
+
+            /**
+             * Bar Chart data
+             */
+            var flotChartData = [
+                {
+                    label: "bar",
+                    data: [[1, 12], [2, 14], [3, 18], [4, 24], [5, 32], [6, 22]]
+                }
+            ];
+            /**
+             * Bar Chart Options for Analytics
+             */
+            var flotBarOptions = {
+                series: {
+                    bars: {
+                        show: true,
+                        barWidth: 0.8,
+                        fill: true,
+                        fillColor: {
+                            colors: [{opacity: 1}, {opacity: 1}]
+                        },
+                        lineWidth: 1
+                    }
+                },
+                xaxis: {
+                    tickDecimals: 0
+                },
+                colors: ["#62cb31"],
+                grid: {
+                    show: false
+                },
+                legend: {
+                    show: false
+                }
+            };
+
+            $.plot($("#flot-bar-chart"), flotChartData, flotBarOptions);
+
+
+            /**
+             * Pie Chart Data
+             */
+            var pieChartData = [
+                {label: "Data 1", data: 16, color: "#62cb31", },
+                {label: "Data 2", data: 6, color: "#A4E585", },
+                {label: "Data 3", data: 22, color: "#368410", },
+                {label: "Data 4", data: 32, color: "#8DE563", }
+            ];
+
+            /**
+             * Pie Chart Options
+             */
+            var pieChartOptions = {
+                series: {
+                    pie: {
+                        show: true
+                    }
+                },
+                grid: {
+                    hoverable: true
+                },
+                tooltip: true,
+                tooltipOpts: {
+                    content: "%p.0%, %s", // show percentages, rounding to 2 decimal places
+                    shifts: {
+                        x: 20,
+                        y: 0
+                    },
+                    defaultTheme: false
+                }
+            };
+
+            $.plot($("#flot-pie-chart"), pieChartData, pieChartOptions);
+
+
+            /**
+             * Line Chart Data and Options
+             */
+
+            var lineChartData = [
+                {
+                    label: "line",
+                    data: [[1, 24], [2, 15], [3, 29], [4, 34], [5, 30], [6, 40], [7, 23], [8, 27], [9, 40]]
+                }
+            ];
+
+            var lineChartOptions = {
+                series: {
+                    lines: {
+                        show: true,
+                        lineWidth: 1,
+                        fill: true,
+                        fillColor: {
+                            colors: [{opacity: 1}, {opacity: 1}
+                            ]
+                        }
+                    }
+                },
+                xaxis: {
+                    tickDecimals: 0
+                },
+                colors: ["#62cb31"],
+                grid: {
+                    tickColor: "#e4e5e7",
+                    borderWidth: 1,
+                    borderColor: '#e4e5e7',
+                    color: '#6a6c6f'
+                },
+                legend: {
+                    show: false
+                },
+                tooltip: true,
+                tooltipOpts: {
+                    content: "x: %x, y: %y"
+                }
+            };
+
+            $.plot($("#flot-line-chart"), lineChartData, lineChartOptions);
+        });
+
+    </script>
+
+{% endblock %}

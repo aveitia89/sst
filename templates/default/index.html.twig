@@ -1,0 +1,135 @@
+{% extends 'base.html.twig' %}
+{% block contenido %}
+    <div class="box">
+        <br/>
+        <div class="row">
+            <div class="col-lg-3 col-md-6">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <div class="row">
+                            <div class="col-xs-3">
+                                <i class="fa fa fa-tint fa-5x"></i>
+                            </div>
+                            <div class="col-xs-9 text-right">
+                                <div class="huge">{{vacunado}}</div>
+                                <div>Vacunados {{anno}}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <a href="{{path('controlVacunacion')}}">
+                        <div class="panel-footer">
+                            <span class="pull-left">Ver detalles</span>
+                            <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                            <div class="clearfix"></div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="panel panel-green">
+                    <div class="panel-heading">
+                        <div class="row">
+                            <div class="col-xs-3">
+                                <i class="fa  fa-user-md fa-5x"></i>
+                            </div>
+                            <div class="col-xs-9 text-right">
+                                <div class="huge">{{chequeo}}</div>
+                                <div>Chequeados {{anno}}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <a href="{{path('chequeomedico')}}">
+                        <div class="panel-footer">
+                            <span class="pull-left">Ver detalles</span>
+                            <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                            <div class="clearfix"></div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="panel panel-yellow">
+                    <div class="panel-heading">
+                        <div class="row">
+                            <div class="col-xs-3">
+                                <i class="fa fa-calendar fa-5x"></i>
+                            </div>
+                            <div class="col-xs-9 text-right">
+                                <div class="huge">{{ medios }}</div>
+                                <div>MP asignado {{anno}}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <a href="{{path('mediodeproteccion_asignar')}}">
+                        <div class="panel-footer">
+                            <span class="pull-left">Ver detalles</span>
+                            <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                            <div class="clearfix"></div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="panel panel-red">
+                    <div class="panel-heading">
+                        <div class="row">
+                            <div class="col-xs-3">
+                                <i class="fa fa-ambulance fa-5x"></i>
+                            </div>
+                            <div class="col-xs-9 text-right">
+                                <div class="huge">{{accidente}}</div>
+                                <div>Accidentados {{anno}}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <a href="{{path('accidentelaboral')}}">
+                        <div class="panel-footer">
+                            <span class="pull-left">Ver detalles</span>
+                            <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                            <div class="clearfix"></div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="col-lg-12">
+                    <!-- Example DataTables Card-->
+                    <div id="chartContainer" style="height: 370px; max-width: 920px; margin: 0px auto;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block javascripts %}
+    <script src="{{ asset('etecsa/canvasjs/canvasjs.min.js') }}"></script>
+    <script>
+        window.onload = function () {
+            var chart = new CanvasJS.Chart("chartContainer", {
+                animationEnabled: true,
+                theme: "light2", // "light1", "light2", "dark1", "dark2"
+                title: {
+                    text: "Notificaciones Sistema"
+                },
+                /*axisY: {
+                    title: "Cantidad de medios"
+                },*/
+                data: [{
+                    type: "column",
+                    /*showInLegend: true,
+                    legendMarkerColor: "grey",
+                    legendText: "Años Comparativos",*/
+                    dataPoints: [
+                        {y: {{cantChequeoVencidos}}, label: "Chequeos Vencidos" },
+                        {y: {{cantMP}}, label: "Medios Proteccion a Reponer" },
+                        {y: {{cantRiesgoSinMedida}}, label: "Riesgo Laborales sin Medidas" },
+                        {y: {{cantMedidasVencidas}}, label: "Medidas Vencidas" },
+                    ]
+                }]
+            });
+            chart.render();
+        }
+    </script>
+{% endblock %}
+

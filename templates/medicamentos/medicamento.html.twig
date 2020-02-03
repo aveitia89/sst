@@ -1,0 +1,114 @@
+{% extends 'base.html.twig' %}
+{% block stylesheets %}
+    <link href="{{ asset('etecsa/exportarTabla/css/buttons.dataTables.min.css') }}" rel="stylesheet" type="text/css" />
+{% endblock %}
+{% block contenido %}
+    <div class="box">
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <h1 style="text-align: center">Gestión de MEDICAMENTOS</h1>
+                    </div>
+                </div>
+                {#Codigo de Botones#}
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="panel-body col-lg-12">
+                            <a href="#nuevoMed" data-toggle="modal" class="btn btn-facebook" data-placement="top" title="Insertar nuevo usuario">Insertar Medicamento</a>
+                            <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="nuevoMed" class="modal fade">
+                                <div class="modal-dialog" style="width: 500px; height: auto">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button aria-hidden="true" data-dismiss="modal" class="close" type="button">×
+                                            </button>
+                                            <h4 class="modal-title" style="text-align: center">Insertar Medicamento</h4>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="row">
+                                                <div class="row">
+                                                    <div class="col-lg-12">
+                                                        <div class="form-group col-lg-12" style="text-align: center">
+                                                            <label>Nombre del medicamento</label>
+                                                            <input style="text-align: center" name="mednombre" type="text"
+                                                                   id="mednombre" class="form-control round-input"
+                                                                   required="required">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <button type="submit" class="btn btn-facebook insertar">Insertar</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {#Fin codigo de botones#}
+                {#actualizar#}
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <!-- Example DataTables Card-->
+                                <div class="box-body listarMedicamento">
+                                    <img class="loading3" src="{{ asset('etecsa/img/loadingBig.gif') }}" style="width: 100px;height: 100px; margin-left: 40%; margin-top: 10%; text-align: center">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {# Fin actualizar#}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block javascripts %}
+    <script src="{{ asset('etecsa/exportarTabla/js/dataTables.buttons.min.js') }}"></script>
+    <script src="{{ asset('etecsa/exportarTabla/js/buttons.flash.min.js') }}"></script>
+    <script src="{{ asset('etecsa/exportarTabla/js/jszip.min.js') }}"></script>
+    <script src="{{ asset('etecsa/exportarTabla/js/pdfmake.min.js') }}"></script>
+    <script src="{{ asset('etecsa/exportarTabla/js/vfs_fonts.js') }}"></script>              
+    <script src="{{ asset('etecsa/exportarTabla/js/buttons.html5.min.js') }}"></script>
+    <script src="{{ asset('etecsa/exportarTabla/js/buttons.print.min.js') }}"></script>
+    <script>
+        $.post("{{ path('medicamentoAjax')}}", function (data) {
+            $('.listarMedicamento').html(data);
+        });
+    </script>
+    <script>
+        $(".insertar").click(function(event){
+            var nombre = document.getElementById("mednombre").value;
+
+            var path ='{{ path("medicamentoInsertar", {'nombre': 'xx'}) }}';
+            path = path.replace("xx", nombre);
+
+            $.ajax({
+                url : path,
+                data : {},
+                type : 'POST',
+                dataType : '',
+                success : function(data) {
+                    $('.listarMedicamento').html(data);
+                },
+                error : function(data) {
+                    alert("Error");
+                },
+                complete : function(data) {
+                    swal({
+                        position: 'top-end',
+                        icon: 'success',
+                        title: 'Se ha insertado correctamente',
+                        showConfirmButton: false,
+                        timer: 1500,
+                        type: "success",
+                        showCancelButton: false,
+                        closeOnConfirm: true
+                    })
+                    $("#nuevoMed").modal('hide');
+                }
+            });
+        });
+    </script>
+{% endblock %}

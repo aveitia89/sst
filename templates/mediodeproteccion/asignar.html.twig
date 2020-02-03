@@ -1,0 +1,195 @@
+{% extends 'base.html.twig' %}
+{% block stylesheets %}
+    <link href="{{ asset('etecsa/exportarTabla/css/buttons.dataTables.min.css') }}" rel="stylesheet" type="text/css" />
+{% endblock %}
+{% block contenido %}
+    <div class="box">
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <h1 style="text-align: center">Medios de Protección</h1>
+                    </div>
+                </div>
+                <br/>
+                <div class="row">
+                    <div class="col-lg-12">
+                        {% if is_granted('ROLE_ESPECIALISTA') %}
+                            <div class="panel-body col-sm-1">
+                                <a href="{{ path('mediodeproteccion') }}" data-toggle="modal" class="btn btn-facebook" data-placement="top" title="Medio de protección.">Medio</a>
+                            </div>
+                        {% endif %}
+                        {% if is_granted('ROLE_TECNICO') %}
+                            <div class="panel-body col-lg-1">
+                                <a href="#nuevoUser" data-toggle="modal" class="btn btn-facebook" data-placement="top" title="Asingar Medios de protección.">Asignar</a>
+                                <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="nuevoUser" class="modal fade">
+                                    <div class="modal-dialog" style="width: 1000px; height: auto">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <button aria-hidden="true" data-dismiss="modal" class="close" type="button">×
+                                                </button>
+                                                <h4 class="modal-title" style="text-align: center">Asignar Medios de Protección</h4>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div class="row">
+                                                    <div class="row">
+                                                        <div class="col-lg-4">
+                                                            <div class="form-group col-lg-12">
+                                                                <label>Trabajador</label>
+                                                                <select class="form-control" name="trabajador" id="trabajador" required="required">
+                                                                    <option value="">Seleccionar</option>
+                                                                    {% for trab in trabajadores %}
+                                                                        <option style="text-align: center" value="{{ trab.id }}">{{ trab.nombre }} {{ trab.apellidos }} {{ trab.segundoApellido }}</option>
+                                                                    {% endfor %}
+                                                                </select>
+                                                            </div>
+                                                            <div class="form-group col-lg-12" id="sandbox-container">
+                                                                <label>Fecha</label>
+                                                                <input style="text-align: center" name="fecha" type="text" id="fecha"
+                                                                       class="form-control round-input" required="required">
+                                                            </div>
+                                                            <div class="form-group col-lg-12">
+                                                                <label>Causas</label>
+                                                                <select class="form-control" name="causas" id="causas" required="required">
+                                                                    <option value="">Seleccionar</option>
+                                                                    <option value="Ciclo de vida">Ciclo de vida</option>
+                                                                    <option value="Reposición">Reposición</option>
+                                                                </select>
+                                                            </div>
+                                                            <div class="form-group col-lg-12">
+                                                                <label>Cantidad</label>
+                                                                <select class="form-control" name="cantidad" id="cantidad" required="required">
+                                                                    <option value="">Seleccionar</option>
+                                                                    <option value="1">Uno</option>
+                                                                    <option value="2">Par</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-lg-8">
+                                                            <div class="form-group col-lg-12">
+                                                                <label>Medios de Proteccion</label>
+                                                                <table id="dataTableAsignar" style="font-size: 90%" class="Asignar table table-striped table-bordered table-hover table-responsive" cellspacing="0">
+                                                                    <thead>
+                                                                    <tr>
+                                                                        <th style="text-align: center">Seleccionar</th>
+                                                                        <th style="text-align: center">Código</th>
+                                                                        <th style="text-align: center">Descripción</th>
+                                                                        <th style="text-align: center">Existencia</th>
+                                                                    </tr>
+                                                                    </thead>
+                                                                    <tbody>
+                                                                    {% for med in medio %}
+                                                                        <tr>
+                                                                            <td style="text-align: center">
+                                                                                <input name="seleccionar-{{ med.codigo }}" dir="{{ med.id }}" id="seleccionar" type="checkbox" class="form-control" value="{{ med.id }}">
+                                                                            </td>
+                                                                            <td style="text-align: center">{{med.codigo}}</td>
+                                                                            <td style="text-align: center">{{med.descripcion}}</td>
+                                                                            <td style="text-align: center">{{med.cantidad}}</td>
+                                                                        </tr>
+                                                                    {% endfor %}
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <button type="submit" class="btn btn-facebook insertar">Insertar</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <!-- Example DataTables Card-->
+                                <div class="box-body listar">
+                                    <img class="loading3" src="{{ asset('etecsa/img/loadingBig.gif') }}" style="width: 100px;height: 100px; margin-left: 40%; margin-top: 10%; text-align: center">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block javascripts %}
+    <script src="{{ asset('etecsa/exportarTabla/js/dataTables.buttons.min.js') }}"></script>
+    <script src="{{ asset('etecsa/exportarTabla/js/buttons.flash.min.js') }}"></script>
+    <script src="{{ asset('etecsa/exportarTabla/js/jszip.min.js') }}"></script>
+    <script src="{{ asset('etecsa/exportarTabla/js/pdfmake.min.js') }}"></script>
+    <script src="{{ asset('etecsa/exportarTabla/js/vfs_fonts.js') }}"></script>              
+    <script src="{{ asset('etecsa/exportarTabla/js/buttons.html5.min.js') }}"></script>
+    <script src="{{ asset('etecsa/exportarTabla/js/buttons.print.min.js') }}"></script>
+    <script>
+        $.post("{{ path('mediodeproteccion_asignarAjax')}}", function (data) {
+            $('.listar').html(data);
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+            $('#dataTableAsignar').DataTable({
+                "lengthMenu": [[5, 10, 25, 50, 100], [5, 10, 25, 50, 100]]
+            });
+        });
+    </script>
+    <script>
+        $('.insertar').click(function (event) {
+            var trabajador = document.getElementById("trabajador").value;
+            var fecha = document.getElementById("fecha").value;
+            var causas = document.getElementById("causas").value;
+            var cantidad = document.getElementById("cantidad").value;
+            var seleccionados = new Array();
+            $('input[type=checkbox]:checked').each(function () {
+                seleccionados.push($(this).val());
+            });
+            var path = '{{ path("mediodeproteccion_insertar", {'idtrabajador': 'xx','fecha': 'xx','causas': 'xx','listamediosid': 'xx', 'cantidad': 'xx'}) }}';
+            path = path.replace("xx", trabajador);
+            path = path.replace("xx", fecha);
+            path = path.replace("xx", causas);
+            path = path.replace("xx", seleccionados);
+            path = path.replace("xx", cantidad);
+
+            $.ajax({
+                url: path,
+                data: {},
+                type: 'POST',
+                dataType: '',
+                success: function (data) {
+                    $("#nuevoUser").modal('hide');
+                    $('.listar').html(data);
+                },
+                error: function (xhr, status) {
+                    swal({
+                        position: 'top-end',
+                        icon: 'error',
+                        title: 'Se ha insertado correctamente.',
+                        showConfirmButton: false,
+                        timer: 1500,
+                        type: "error",
+                        showCancelButton: false,
+                        closeOnConfirm: true
+                    })
+                },
+                complete: function (xhr, status) {
+                    swal({
+                        position: 'top-end',
+                        icon: 'success',
+                        title: 'Se ha insertado correctamente.',
+                        showConfirmButton: false,
+                        timer: 1500,
+                        type: "success",
+                        showCancelButton: false,
+                        closeOnConfirm: true
+                    })
+                }
+            });
+        });
+    </script>
+{% endblock %}

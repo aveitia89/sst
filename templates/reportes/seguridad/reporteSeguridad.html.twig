@@ -1,0 +1,491 @@
+{% extends 'base.html.twig' %}
+{% block stylesheets %}
+    <link href="{{ asset('etecsa/exportarTabla/css/buttons.dataTables.min.css') }}" rel="stylesheet" type="text/css" />
+{% endblock %}
+{% block contenido %}
+    <div class="box">
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <h1 style="text-align: center">Reportes Seguridad del trabajador</h1>
+                    </div>
+                </div>
+                <br/>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="panel-body col-md-3">
+                            <a href="#nuevoUser1" data-toggle="modal" class="btn btn-facebook" data-placement="top" title="Entregas por Unidad Organizativa y Fecha.">Entregas de MP por UO y fecha</a>
+                            <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="nuevoUser1" class="modal fade">
+                                <div class="modal-dialog" style="width: 750px; height: auto">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button aria-hidden="true" data-dismiss="modal" class="close" type="button">×
+                                            </button>
+                                            <h4 class="modal-title" style="text-align: center">Entregas por Unidad Organizativa y por rango de fecha</h4>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="row">
+                                                <div class="row">
+                                                    <div class="col-lg-12">
+                                                        <div class="form-group col-lg-6" style="text-align: center">
+                                                            <label>Rango de Fecha</label>
+                                                            <input name="fechaUO" id="fechaUO" type="text" class="form-control pull-right rango">
+                                                        </div>
+                                                        <div class="form-group col-lg-6" style="text-align: center">
+                                                            <label>Unidad Organizativa</label>
+                                                            <select class="form-control" name="uo" id="uo"
+                                                                    required="required">
+                                                                <option value=""></option>
+                                                                {% for uo in unidadOrganizativa %}
+                                                                    <option value="{{ uo.nombre }}">{{ uo.nombre }}</option>
+                                                                {% endfor %}
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <button type="submit" class="btn btn-facebook entregaUOF">Insertar</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="panel-body  col-md-4">
+                            <a href="#nuevoUser2" data-toggle="modal" class="btn btn-facebook" data-placement="top" title="Entregas por Trabajador y Fecha.">Entrega de MP por Trabajador y por fecha</a>
+                            <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="nuevoUser2" class="modal fade">
+                                <div class="modal-dialog" style="width: 500px; height: auto">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button aria-hidden="true" data-dismiss="modal" class="close" type="button">×
+                                            </button>
+                                            <h4 class="modal-title" style="text-align: center">Entregas por Trabajador y por rango de fecha</h4>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="row">
+                                                <div class="row">
+                                                    <div class="col-lg-12">
+                                                        <div class="form-group col-lg-6" style="text-align: center">
+                                                            <label>Rango de Fecha</label>
+                                                            <input name="fechaTF" id="fechaTF" type="text" class="form-control pull-right rango">
+                                                        </div>
+                                                        <div class="form-group col-lg-6" style="text-align: center">
+                                                            <label>Trabajador</label>
+                                                            <select class="form-control" name="trabajadorTF" id="trabajadorTF"
+                                                                    required="required">
+                                                                <option value=""></option>
+                                                                {% for trab in trabajadores %}
+                                                                    <option style="text-align: center" value="{{ trab.id }}">{{ trab.nombre }} {{ trab.apellidos }} {{ trab.segundoApellido }}</option>
+                                                                {% endfor %}
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <button type="submit" class="btn btn-facebook entregaTF">Insertar</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel-body col-lg-3">
+                            <a href="#nuevoUser3" data-toggle="modal" class="btn btn-facebook" data-placement="top" title="Entregas por Area de la DTSR.">Entregas de MP por Areas</a>
+                            <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="nuevoUser3" class="modal fade">
+                                <div class="modal-dialog" style="width: 300px; height: auto">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button aria-hidden="true" data-dismiss="modal" class="close" type="button">×
+                                            </button>
+                                            <h4 class="modal-title" style="text-align: center">Entregas por Area de la DTSR</h4>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="row">
+                                                <div class="row">
+                                                    <div class="col-lg-12">
+                                                        <div class="form-group col-lg-12" style="text-align: center">
+                                                            <label>Área</label>
+                                                            <select class="form-control" name="area" id="area"
+                                                                    required="required">
+                                                                <option value=""></option>
+                                                                {% for a in area %}
+                                                                    <option style="text-align: center" value="{{ a.nombre }}">{{ a.nombre }}</option>
+                                                                {% endfor %}
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <button type="submit" class="btn btn-facebook entregaArea">Insertar</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% if is_granted('ROLE_ESPECIALISTA') %}
+                            <div class="panel-body col-lg-2">
+                                <a href="#nuevoUser4" data-toggle="modal" class="btn btn-facebook" data-placement="top" title="Demanda por Unidad Organizativa">Demanda de MP por UO</a>
+                                <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="nuevoUser4" class="modal fade">
+                                    <div class="modal-dialog" style="width: 300px; height: auto">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <button aria-hidden="true" data-dismiss="modal" class="close" type="button">×
+                                                </button>
+                                                <h4 class="modal-title" style="text-align: center">Calcular la Demanda por Unidad Organizativa</h4>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div class="row">
+                                                    <div class="row">
+                                                        <div class="col-lg-12">
+                                                            <div class="form-group col-lg-12" style="text-align: center">
+                                                                <label>Unidad Organizativa</label>
+                                                                <select class="form-control" name="uoDemanda" id="uoDemanda"
+                                                                        required="required">
+                                                                    <option value=""></option>
+                                                                    {% for uo in unidadOrganizativa %}
+                                                                        <option style="text-align: center" value="{{ uo.id }}">{{ uo.nombre }}</option>
+                                                                    {% endfor %}
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <button type="submit" class="btn btn-facebook demanda">Insertar</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel-body col-lg-3">
+                                <a href="#nuevoUser5" data-toggle="modal" class="btn btn-facebook" data-placement="top" title="Demanda por trabajador.">Demanda de MP por trabajador</a>
+                                <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="nuevoUser5" class="modal fade">
+                                    <div class="modal-dialog" style="width: 300px; height: auto">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <button aria-hidden="true" data-dismiss="modal" class="close" type="button">×
+                                                </button>
+                                                <h4 class="modal-title" style="text-align: center">Calcular la Demanda por Trabajador</h4>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div class="row">
+                                                    <div class="row">
+                                                        <div class="col-lg-12">
+                                                            <div class="form-group col-lg-12" style="text-align: center">
+                                                                <label>Trabajador</label>
+                                                                <select class="form-control" name="demandaTrabajador" id="demandaTrabajador" required="required">
+                                                                    <option value="">Seleccionar</option>
+                                                                    {% for trab in trabajadores %}
+                                                                        <option style="text-align: center" value="{{ trab.id }}">{{ trab.nombre }} {{ trab.apellidos }} {{ trab.segundoApellido }}</option>
+                                                                    {% endfor %}
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <button type="submit" class="btn btn-facebook demandaTrab">Insertar</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel-body col-lg-3">
+                                <a data-toggle="modal" class="btn btn-facebook presupuesto" data-placement="top" title="Calculo del Presupuesto por medio de protección.">Presupuesto MP utilizado</a>
+                            </div>
+                            <div class="panel-body col-lg-3">
+                                <a data-toggle="modal" class="btn btn-facebook balance" data-placement="top" title="Balance de la demanda de los medios de protección.">Balance DI y Entregada de MP</a>
+                            </div>
+                            <div class="panel-body col-lg-3">
+                                <a href="{{path('reportesSeguridad')}}" data-toggle="modal" class="btn btn-facebook balance" data-placement="top" title="Limpiar">Limpiar</a>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <!-- Example DataTables Card-->
+                                <div class="box-body listar">
+                                    {#<img class="loading3" src="{{ asset('etecsa/img/loadingBig.gif') }}" style="width: 100px;height: 100px; margin-left: 40%; margin-top: 10%; text-align: center">#}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block javascripts %}
+    <script src="{{ asset('etecsa/exportarTabla/js/dataTables.buttons.min.js') }}"></script>
+    <script src="{{ asset('etecsa/exportarTabla/js/buttons.flash.min.js') }}"></script>
+    <script src="{{ asset('etecsa/exportarTabla/js/jszip.min.js') }}"></script>
+    <script src="{{ asset('etecsa/exportarTabla/js/pdfmake.min.js') }}"></script>
+    <script src="{{ asset('etecsa/exportarTabla/js/vfs_fonts.js') }}"></script>
+    <script src="{{ asset('etecsa/exportarTabla/js/buttons.html5.min.js') }}"></script>
+    <script src="{{ asset('etecsa/exportarTabla/js/buttons.print.min.js') }}"></script>
+    <script>
+        $('.entregaUOF').click(function (event) {
+            var fechaUO = document.getElementById("fechaUO").value;
+            var uo = document.getElementById("uo").value;
+
+            var path = '{{ path("EUOF", {'fecha': 'xx','uo': 'xx'}) }}';
+            path = path.replace("xx", fechaUO);
+            path = path.replace("xx", uo);
+
+            $.ajax({
+                url: path,
+                data: {},
+                type: 'POST',
+                dataType: '',
+                success: function (data) {
+                    $("#nuevoUser1").modal('hide');
+                    $('.listar').html(data);
+                },
+                error: function (xhr, status) {
+                    swal({
+                        position: 'top-end',
+                        icon: 'error',
+                        title: 'Error.',
+                        showConfirmButton: false,
+                        timer: 1500,
+                        type: "error",
+                        showCancelButton: false,
+                        closeOnConfirm: true
+                    })
+                },
+            });
+        });
+    </script>
+    <script>
+        $('.presupuesto').click(function (event) {
+            var path = '{{ path("presupuesto") }}';
+            $.ajax({
+                url: path,
+                data: {},
+                type: 'POST',
+                dataType: '',
+                success: function (data) {
+                    $('.listar').html(data);
+                },
+                error: function (xhr, status) {
+                    swal({
+                        position: 'top-end',
+                        icon: 'error',
+                        title: 'Error.',
+                        showConfirmButton: false,
+                        timer: 1500,
+                        type: "error",
+                        showCancelButton: false,
+                        closeOnConfirm: true
+                    })
+                },
+            });
+        })
+    </script>
+    <script>
+        $('.balance').click(function (event) {
+            var path = '{{ path("balance") }}';
+            $.ajax({
+                url: path,
+                data: {},
+                type: 'POST',
+                dataType: '',
+                success: function (data) {
+                    $('.listar').html(data);
+                },
+                error: function (xhr, status) {
+                    swal({
+                        position: 'top-end',
+                        icon: 'error',
+                        title: 'Error.',
+                        showConfirmButton: false,
+                        timer: 1500,
+                        type: "error",
+                        showCancelButton: false,
+                        closeOnConfirm: true
+                    })
+                },
+            });
+        })
+    </script>
+    <script>
+        $('.demanda').click(function (event) {
+            var area = document.getElementById("uoDemanda").value;
+
+            var path = '{{ path("demandaMP", {'uo': 'xx'}) }}';
+            path = path.replace("xx", area);
+
+            $.ajax({
+                url: path,
+                data: {},
+                type: 'POST',
+                dataType: '',
+                success: function (data) {
+                    $("#nuevoUser4").modal('hide');
+                    $('.listar').html(data);
+                },
+                error: function (xhr, status) {
+                    swal({
+                        position: 'top-end',
+                        icon: 'error',
+                        title: 'Error.',
+                        showConfirmButton: false,
+                        timer: 1500,
+                        type: "error",
+                        showCancelButton: false,
+                        closeOnConfirm: true
+                    })
+                },
+            });
+        })
+    </script>
+    <script>
+        $('.demandaTrab').click(function (event) {
+            var idtrabajador = document.getElementById("demandaTrabajador").value;
+
+            var path = '{{ path("demandaTrab", {'idtrabajador': 'xx'}) }}';
+            path = path.replace("xx", idtrabajador);
+
+            $.ajax({
+                url: path,
+                data: {},
+                type: 'POST',
+                dataType: '',
+                success: function (data) {
+                    $("#nuevoUser5").modal('hide');
+                    $('.listar').html(data);
+                },
+                error: function (xhr, status) {
+                    swal({
+                        position: 'top-end',
+                        icon: 'error',
+                        title: 'Error.',
+                        showConfirmButton: false,
+                        timer: 1500,
+                        type: "error",
+                        showCancelButton: false,
+                        closeOnConfirm: true
+                    })
+                },
+            });
+        })
+    </script>
+
+    <script>
+        $('.entregaTF').click(function (event) {
+            var fechaTF = document.getElementById("fechaTF").value;
+            var trabajadorTF = document.getElementById("trabajadorTF").value;
+
+            var path = '{{ path("ETF", {'fecha': 'xx','idtrabajador': 'xx'}) }}';
+            path = path.replace("xx", fechaTF);
+            path = path.replace("xx", trabajadorTF);
+
+            $.ajax({
+                url: path,
+                data: {},
+                type: 'POST',
+                dataType: '',
+                success: function (data) {
+                    $("#nuevoUser2").modal('hide');
+                    $('.listar').html(data);
+                },
+                error: function (xhr, status) {
+                    swal({
+                        position: 'top-end',
+                        icon: 'error',
+                        title: 'Error.',
+                        showConfirmButton: false,
+                        timer: 1500,
+                        type: "error",
+                        showCancelButton: false,
+                        closeOnConfirm: true
+                    })
+                },
+            });
+        });
+    </script>
+    <script>
+        $('.entregaArea').click(function (event) {
+            var area = document.getElementById("area").value;
+
+            var path = '{{ path("EXA", {'area': 'xx'}) }}';
+            path = path.replace("xx", area);
+
+            $.ajax({
+                url: path,
+                data: {},
+                type: 'POST',
+                dataType: '',
+                success: function (data) {
+                    $("#nuevoUser3").modal('hide');
+                    $('.listar').html(data);
+                },
+                error: function (xhr, status) {
+                    swal({
+                        position: 'top-end',
+                        icon: 'error',
+                        title: 'Error.',
+                        showConfirmButton: false,
+                        timer: 1500,
+                        type: "error",
+                        showCancelButton: false,
+                        closeOnConfirm: true
+                    })
+                },
+            });
+        });
+    </script>
+    <script>
+        {{ parent() }}
+        $(document).ready(function() {
+            fechitas();
+            function fechitas() {
+                $('.rango').daterangepicker({
+                    "autoApply": true,
+                    autoclose: true,
+                    language: "es",
+                    "locale": {
+                        "format": "DD.MM.YYYY",
+                        "separator": "-",
+                        "applyLabel": "Apply",
+                        "cancelLabel": "Cancel",
+                        "fromLabel": "From",
+                        "toLabel": "To",
+                        "customRangeLabel": "Custom",
+                        "weekLabel": "W",
+                        "daysOfWeek": [
+                            "Do",
+                            "Lu",
+                            "Ma",
+                            "Mi",
+                            "Ju",
+                            "Vi",
+                            "Sa"
+                        ],
+                        "monthNames": [
+                            "Enero",
+                            "Febrero",
+                            "Marzo",
+                            "Abril",
+                            "Mayo",
+                            "Junio",
+                            "Julio",
+                            "Agosto",
+                            "Septiembre",
+                            "Octubre",
+                            "Noviembre",
+                            "Diciembre"
+                        ],
+                        "firstDay": 0
+                    },
+
+                    "startDate": "{{  "now" | date("d/m/Y") }}",
+                    "endDate": "{{ "now" | date("d/m/Y") }}",
+                    "opens": "center",
+                    "drops": "down"
+                },)
+            };
+        });
+    </script>
+{% endblock %}

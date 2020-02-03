@@ -1,0 +1,486 @@
+{% extends 'base.html.twig' %}
+{% block stylesheets %}
+    <link href="{{ asset('etecsa/exportarTabla/css/buttons.dataTables.min.css') }}" rel="stylesheet" type="text/css" />
+{% endblock %}
+{% block contenido %}
+    <div class="box">
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <h1 style="text-align: center">Registrar Supervisiones</h1>
+                    </div>
+                </div>
+                <br/>
+                <div class="row">
+                    <div class="col-lg-12">
+                        {% if is_granted('ROLE_JEFEBRIGADA') %}
+                            <div class="panel-body col-lg-1">
+                                <a href="#nuevoUser" data-toggle="modal" class="btn btn-facebook" data-placement="top" title="Insertar">Insertar</a>
+                                <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="nuevoUser" class="modal fade">
+                                    <div class="modal-dialog" style="width: 850px; height: auto">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <button aria-hidden="true" data-dismiss="modal" class="close" type="button">×
+                                                </button>
+                                                <h4 class="modal-title" style="text-align: center">Insertar nueva supervisión</h4>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div class="row">
+                                                    <div class="row">
+                                                        <div class="col-lg-12">
+                                                            <div class="panel-body">
+                                                                <!-- Nav tabs -->
+                                                                <ul class="nav nav-tabs">
+                                                                    <li class="active"><a href="#home" data-toggle="tab">Supervisión</a>
+                                                                    </li>
+                                                                    <li><a href="#profile" data-toggle="tab">Riesgos</a>
+                                                                    </li>
+                                                                    <li><a href="#messages" data-toggle="tab">Plan de Medidas</a>
+                                                                    </li>
+                                                                </ul>
+
+                                                                <!-- Tab panes -->
+                                                                <div class="tab-content">
+                                                                    <div class="tab-pane fade in active"  id="home">
+                                                                        <div class="form-group col-lg-4">
+                                                                            <label>Unidad Organizativa</label>
+                                                                            <select class="form-control" name="area" id="area"
+                                                                                    required="required">
+                                                                                <option value="">Seleccionar</option>
+                                                                                {% for uo in area %}
+                                                                                    <option value="{{ uo.id }}">{{ uo.nombre }}</option>
+                                                                                {% endfor %}
+                                                                            </select>
+                                                                        </div>
+                                                                        <div class="form-group col-lg-4">
+                                                                            <label>Área de la Unidad Organizativa</label>
+                                                                            <select class="form-control" name="uo" id="uo"
+                                                                                    required="required">
+                                                                                <option value="">Seleccionar</option>
+                                                                            </select>
+                                                                        </div>
+                                                                        <div class="form-group col-lg-4">
+                                                                            <label>Responsable</label>
+                                                                            <select class="form-control" name="responsable" id="responsable" required="required">
+                                                                                <option value="">Seleccionar</option>
+                                                                            </select>
+                                                                        </div>
+                                                                        <div class="form-group col-lg-4">
+                                                                            <label>Tipo de supervisión</label>
+                                                                            <select class="form-control" name="tipoSupervision" id="tipoSupervision" required="required">
+                                                                                <option value="0">Seleccionar</option>
+                                                                                {% for tipo in tipoSupervision %}
+                                                                                    {% if tipo.nivel == "Nivel 1" %}
+                                                                                        {% if is_granted('ROLE_JEFEBRIGADA') or not is_granted('ROLE_TECNICO') or not is_granted('ROLE_ESPECIALISTA') %}
+                                                                                            <option style="text-align: center" value="{{ tipo.id }}">{{ tipo.nivel }}</option>
+                                                                                        {% endif %}
+                                                                                    {% elseif tipo.nivel == "Nivel 2" %}
+                                                                                        {% if is_granted('ROLE_JEFEOPERACIONES') or not is_granted('ROLE_TECNICO') or not is_granted('ROLE_ESPECIALISTA') %}
+                                                                                            <option style="text-align: center" value="{{ tipo.id }}">{{ tipo.nivel }}</option>
+                                                                                        {% endif %}
+                                                                                    {% else %}
+                                                                                        {% if is_granted('ROLE_TECNICO') %}
+                                                                                            <option style="text-align: center" value="{{ tipo.id }}">{{ tipo.nivel }}</option>
+                                                                                        {% endif %}
+                                                                                    {% endif %}
+                                                                                {% endfor %}
+                                                                            </select>
+                                                                        </div>
+                                                                        <div class="form-group col-lg-4">
+                                                                            <label>Estado</label>
+                                                                            <select class="form-control" name="estado" id="estado" required="required">
+                                                                                <option value="">Seleccionar</option>
+                                                                            </select>
+                                                                        </div>
+                                                                        <div class="form-group col-lg-4">
+                                                                            <label>Deficiencias Detectadas</label>
+                                                                            <select class="form-control" name="deficiencias" id="deficiencias" required="required">
+                                                                                <option value="">Seleccionar</option>
+                                                                                {% for tipo in deficiencias %}
+                                                                                    <option style="text-align: center" value="{{ tipo.id }}">{{ tipo.descripcion }}</option>
+                                                                                {% endfor %}
+                                                                            </select>
+                                                                        </div>
+                                                                        <div class="form-group col-lg-4" id="sandbox-container">
+                                                                            <label>Fecha</label>
+                                                                            <input style="text-align: center" name="fechaTF" type="text" id="fechaTF"
+                                                                                   class="form-control round-input" required="required">
+                                                                        </div>
+                                                                        <div class="form-group col-lg-4">
+                                                                            <label>Aspecto</label>
+                                                                            <input style="text-align: center" name="aspecto" type="text" id="aspecto"
+                                                                                   class="form-control round-input" required="required">
+                                                                        </div>
+                                                                        {#<div class="form-group col-lg-4">
+                                                                            <label>Evaluación</label>
+                                                                            <input style="text-align: center" name="evaluacion" type="text" id="evaluacion"
+                                                                                   class="form-control round-input" required="required">
+                                                                        </div>#}
+                                                                        <div class="form-group col-lg-12" >
+                                                                            <label>Observaciones</label>
+                                                                            <textarea style="text-align: center" name="observaciones" rows="4" type="text" id="observaciones" class="form-control round-input" required="required"></textarea>
+                                                                        </div>
+                                                                        <div class="form-group col-lg-1" >
+                                                                            <button type="submit" class="btn btn-facebook insertarSupervision">Insertar</button>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="tab-pane fade" id="profile">
+                                                                        <div class="form-group col-lg-6">
+                                                                            <label>ID Supervisiones</label>
+                                                                            <select class="form-control" name="idsupervR" id="idsupervR" required="required">
+                                                                                <option value="">Seleccionar</option>
+                                                                                {% for super in supervision %}
+                                                                                    <option style="text-align: center" value="{{ super.id }}">{{ super.id }}</option>
+                                                                                {% endfor %}
+                                                                            </select>
+                                                                        </div>
+                                                                        <div class="form-group col-lg-6">
+                                                                            <label>Descripcion</label>
+                                                                            <textarea style="text-align: center" name="descripRiesgo" rows="2" type="text" id="descripRiesgo" class="form-control round-input" required="required"></textarea>
+                                                                        </div>
+                                                                        <div class="form-group col-lg-6">
+                                                                            <label>Probabilidad</label>
+                                                                            <select class="form-control" name="probabilidad" id="probabilidad" required="required">
+                                                                                <option value="">Seleccionar</option>
+                                                                                {% for super in probalidad %}
+                                                                                    <option style="text-align: center" value="{{ super.id }}">{{ super.descripcion }}</option>
+                                                                                {% endfor %}
+                                                                            </select>
+                                                                        </div>
+                                                                        <div class="form-group col-lg-6">
+                                                                            <label>Severidad</label>
+                                                                            <select class="form-control" name="severidad" id="severidad" required="required">
+                                                                                <option value="">Seleccionar</option>
+                                                                                {% for super in severidad    %}
+                                                                                    <option style="text-align: center" value="{{ super.id }}">{{ super.descripcion }}</option>
+                                                                                {% endfor %}
+                                                                            </select>
+                                                                        </div>
+                                                                        <div class="form-group col-lg-1">
+                                                                            <button type="submit" class="btn btn-facebook insertarRiesgo">Insertar</button>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="tab-pane fade" id="messages">
+                                                                        <div class="form-group col-lg-6">
+                                                                            <label>ID Supervisiones</label>
+                                                                            <select class="form-control" name="idsupervMedidas" id="idsupervMedidas" required="required">
+                                                                                <option value="">Seleccionar</option>
+                                                                                {% for super in supervision %}
+                                                                                    <option style="text-align: center" value="{{ super.id }}">{{ super.id }}</option>
+                                                                                {% endfor %}
+                                                                            </select>
+                                                                        </div>
+                                                                        <div class="form-group col-lg-6">
+                                                                            <label>Riesgo</label>
+                                                                            <select class="form-control" name="idriesgoMedidas" id="idriesgoMedidas" required="required">
+                                                                                <option value="">Seleccionar</option>
+                                                                                {% for super in riesgos %}
+                                                                                    <option style="text-align: center" value="{{ super.id }}">{{ super.descripcion }}</option>
+                                                                                {% endfor %}
+                                                                            </select>
+                                                                        </div>
+                                                                        <div class="form-group col-lg-6" style="text-align: center">
+                                                                            <label>Peligro</label>
+                                                                            <input style="text-align: center" name="peligro" type="text" id="peligro"
+                                                                                   class="form-control round-input" required="required">
+                                                                        </div>
+                                                                        <div class="form-group col-lg-6" style="text-align: center">
+                                                                            <label>Clasificación</label>
+                                                                            <input style="text-align: center" name="clasificacion" type="text" id="clasificacion"
+                                                                                   class="form-control round-input" required="required">
+                                                                        </div>
+                                                                        <div class="form-group col-lg-6" id="sandbox-container">
+                                                                            <label>Fecha Cumplimiento</label>
+                                                                            <input style="text-align: center" name="fechaCumplimiento" type="text" id="fechaCumplimiento"
+                                                                                   class="form-control round-input" required="required">
+                                                                        </div>
+                                                                        <div class="form-group col-lg-6">
+                                                                            <label>Estado</label>
+                                                                            <select class="form-control" name="cumplimiento" id="cumplimiento" required="required">
+                                                                                <option value="">Seleccionar</option>
+                                                                                <option value="Cumplido">Cumplido</option>
+                                                                                <option value="No Cumplido">No Cumplido</option>
+                                                                            </select>
+                                                                        </div>
+                                                                        <div class="form-group col-lg-12">
+                                                                            <label>Medida</label>
+                                                                            <input style="text-align: center" name="medida" type="text" id="medida"
+                                                                                   class="form-control round-input" required="required">
+                                                                        </div>
+                                                                        <div class="form-group col-lg-1">
+                                                                            <button type="submit" class="btn btn-facebook insertarMedidas">Insertar</button>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <!-- Example DataTables Card-->
+                                <div class="box-body listar">
+                                    <img class="loading3" src="{{ asset('etecsa/img/loadingBig.gif') }}" style="width: 100px;height: 100px; margin-left: 40%; margin-top: 10%; text-align: center">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block javascripts %}
+    <script src="{{ asset('etecsa/exportarTabla/js/dataTables.buttons.min.js') }}"></script>
+    <script src="{{ asset('etecsa/exportarTabla/js/buttons.flash.min.js') }}"></script>
+    <script src="{{ asset('etecsa/exportarTabla/js/jszip.min.js') }}"></script>
+    <script src="{{ asset('etecsa/exportarTabla/js/pdfmake.min.js') }}"></script>
+    <script src="{{ asset('etecsa/exportarTabla/js/vfs_fonts.js') }}"></script>
+    <script src="{{ asset('etecsa/exportarTabla/js/buttons.html5.min.js') }}"></script>
+    <script src="{{ asset('etecsa/exportarTabla/js/buttons.print.min.js') }}"></script>
+    <script>
+        $.post("{{ path('supervisionAjax')}}", function (data) {
+            $('.listar').html(data);
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+            $("#area").change(function (event) {
+                $("#uo").find('option').remove();
+                var id = document.getElementById("area").value;
+                var path ='{{ path("areaUO", {'id': 'xx',}) }}';
+                path = path.replace("xx", id);
+                $.ajax({
+                    type:"GET",
+                    url: path,
+                    dataType: 'json',
+                    data: {id:id},
+                    success: function (response) {
+                        $.each(response,function(key, registro) {
+                            $("#uo").append('<option value='+registro.id+'>'+registro.nombre+'</option>');
+                        });
+                    }
+                });
+            });
+        });
+        $(document).ready(function () {
+            $("#uo").change(function (event) {
+                $("#responsable").find('option').remove();
+                var idUO = document.getElementById("uo").value;
+                var idArea = document.getElementById("area").value;
+                var path ='{{ path("trabajadorUO", {'idUO': 'xx','idArea': 'xx'}) }}';
+                path = path.replace("xx", idUO);
+                path = path.replace("xx", idArea);
+                $.ajax({
+                    type:"GET",
+                    url: path,
+                    dataType: 'json',
+                    data: {idUO:idUO,idArea:idArea},
+                    success: function (response) {
+                        $.each(response,function(key, registro) {
+                            $("#responsable").append('<option value='+registro.id+'>'+registro.nombre+'</option>');
+                        });
+                    }
+                });
+            });
+        });
+        $(document).ready(function () {
+            $("#tipoSupervision").change(function (event) {
+                $("#estado").find('option').remove();
+                var id = document.getElementById("tipoSupervision").value;
+                if (id == "0")
+                {
+                    $("#estado").append('<option value="">Seleccionar</option>');
+                }
+                else if (id == 1)
+                {
+                    document.getElementById("aspecto").disabled = true;
+                    /*document.getElementById("evaluacion").disabled = true;*/
+                    document.getElementById("observaciones").disabled = true;
+                    $("#estado").append('<option value="">Seleccionar</option>');
+                    $("#estado").append('<option value="Resuelto">Resuelto</option>');
+                    $("#estado").append('<option value="Pendiente a resolver">Pendiente a resolver</option>');
+
+                }
+                else if (id == 2)
+                {
+                    document.getElementById("aspecto").disabled = false;
+                    /*document.getElementById("evaluacion").disabled = false;*/
+                    document.getElementById("observaciones").disabled = false;
+                    $("#estado").append('<option value="">Seleccionar</option>');
+                    $("#estado").append('<option value="Bien">Bien</option>');
+                    $("#estado").append('<option value="Regular">Regular</option>');
+                    $("#estado").append('<option value="Mal">Mal</option>');
+                }
+                else if (id == 3){
+                    document.getElementById("aspecto").disabled = false;
+                    /*document.getElementById("evaluacion").disabled = false;*/
+                    document.getElementById("observaciones").disabled = false;
+                    $("#estado").append('<option value="">Seleccionar</option>');
+                }
+            });
+        });
+    </script>
+    <script>
+        $(".insertarSupervision").click(function(event){
+            var idArea = document.getElementById("area").value;
+            var idUO = document.getElementById("uo").value;
+            var idtrabajador = document.getElementById("responsable").value;
+            var idNivel = document.getElementById("tipoSupervision").value;
+            var estados = document.getElementById("estado").value;
+            var iddeficiencia = document.getElementById("deficiencias").value;
+            var fecha = document.getElementById("fechaTF").value;
+            var aspecto = document.getElementById("area").value;
+            var observaciones = document.getElementById("area").value;
+
+            var path = '';
+
+            if(idNivel == 1)
+            {
+                var path ='{{ path("insertarSupervisionNivel1", {'idArea': 'xx','idUO': 'xx',
+                    'idtrabajador': 'xx','idNivel': 'xx','estado': 'xx','iddeficiencia': 'xx',}) }}';
+                path = path.replace("xx", idArea);
+                path = path.replace("xx", idUO);
+                path = path.replace("xx", idtrabajador);
+                path = path.replace("xx", idNivel);
+                path = path.replace("xx", estados);
+                path = path.replace("xx", iddeficiencia);
+            }else if(idNivel == 2){
+                var path ='{{ path("insertarSupervisionNivel2", {'idArea': 'xx','idUO': 'xx',
+                    'idtrabajador': 'xx','idNivel': 'xx','estado': 'xx','iddeficiencia': 'xx','fecha': 'xx',
+                    'aspecto': 'xx','observaciones': 'xx'}) }}';
+                path = path.replace("xx", idArea);
+                path = path.replace("xx", idUO);
+                path = path.replace("xx", idtrabajador);
+                path = path.replace("xx", idNivel);
+                path = path.replace("xx", estados);
+                path = path.replace("xx", iddeficiencia);
+                path = path.replace("xx", fecha);
+                path = path.replace("xx", aspecto);
+                path = path.replace("xx", observaciones);
+            }else {
+                var path ='{{ path("insertarSupervisionNivel3", {'idArea': 'xx','idUO': 'xx',
+                    'idtrabajador': 'xx','idNivel': 'xx','estado': 'xx','iddeficiencia': 'xx','fecha': 'xx',
+                    'aspecto': 'xx','observaciones': 'xx'}) }}';
+                path = path.replace("xx", idArea);
+                path = path.replace("xx", idUO);
+                path = path.replace("xx", idtrabajador);
+                path = path.replace("xx", idNivel);
+                path = path.replace("xx", estados);
+                path = path.replace("xx", iddeficiencia);
+                path = path.replace("xx", fecha);
+                path = path.replace("xx", aspecto);
+                path = path.replace("xx", observaciones);
+            }
+
+            $.ajax({
+                url : path,
+                data : {},
+                type : 'POST',
+                dataType : '',
+                success : function(data) {
+                    $('.listar').html(data);
+                    {#$("#nuevoUser").modal('hide');#}
+                },
+                error : function(data) {
+                    alert("Error");
+                },
+            });
+        });
+    </script>
+    <script>
+        $(".insertarRiesgo").click(function(event){
+            var idSupervision = document.getElementById("idsupervR").value;
+            var descripcion = document.getElementById("descripRiesgo").value;
+            var idprobabilidad = document.getElementById("probabilidad").value;
+            var idseveridad = document.getElementById("severidad").value;
+
+            var path ='{{ path("insertarRiesgo", {'idSupervision': 'xx','descripcion': 'xx',
+                'idprobabilidad': 'xx','idseveridad': 'xx'}) }}';
+            path = path.replace("xx", idSupervision);
+            path = path.replace("xx", descripcion);
+            path = path.replace("xx", idprobabilidad);
+            path = path.replace("xx", idseveridad);
+
+            $.ajax({
+                url : path,
+                data : {},
+                type : 'POST',
+                dataType : '',
+                success : function(data) {
+                    $('.listar').html(data);
+                    {#$("#nuevoUser").modal('hide');#}
+                },
+                error : function(data) {
+                    alert("Error");
+                },
+            });
+        });
+    </script>
+    <script>
+        $(".insertarMedidas").click(function(event){
+            var idSupervision = document.getElementById("idsupervMedidas").value;
+            var idRiesgo = document.getElementById("idriesgoMedidas").value;
+            var peligro = document.getElementById("peligro").value;
+            var clasificacion = document.getElementById("clasificacion").value;
+            var fechaCumplimiento = document.getElementById("fechaCumplimiento").value;
+            var estado = document.getElementById("cumplimiento").value;
+            var medida = document.getElementById("medida").value;
+
+            var path ='{{ path("insertarMedidas", {'idSupervision': 'xx','idRiesgo': 'xx',
+                'peligro': 'xx','clasificacion': 'xx',
+                'fechaCumplimiento': 'xx','estado': 'xx', 'medida':'xx'}) }}';
+            path = path.replace("xx", idSupervision);
+            path = path.replace("xx", idRiesgo);
+            path = path.replace("xx", peligro);
+            path = path.replace("xx", clasificacion);
+            path = path.replace("xx", fechaCumplimiento);
+            path = path.replace("xx", estado);
+            path = path.replace("xx", medida);
+
+            $.ajax({
+                url : path,
+                data : {},
+                type : 'POST',
+                dataType : '',
+                success : function(data) {
+                    $('.listar').html(data);
+                    {#$("#nuevoUser").modal('hide');#}
+                },
+                error : function(data) {
+                    alert("Error");
+                },
+            });
+        });
+    </script>
+    <script>
+        $(".listado").click(function(event){
+            var path ='{{ path("listadoDT") }}';
+
+            $.ajax({
+                url : path,
+                data : {},
+                type : 'POST',
+                dataType : '',
+                success : function(data) {
+                    $('.listar').html(data);
+                    {#$("#nuevoUser").modal('hide');#}
+                },
+                error : function(data) {
+                    alert("Error");
+                },
+            });
+        });
+    </script>
+{% endblock %}

@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="">
+        <meta name="author" content="">
+        <link rel="icon" type="image/png" sizes="16x16" href="{{asset('styles/assets/images/favicon.png') }}">
+        <title>{% block title %}Seguridad Y Salud del Trabajo{% endblock %}</title>
+        {% block stylesheets %}{% endblock %}
+        <link href="{{asset('styles/assets/plugins/bootstrap/css/bootstrap.min.css')}}"rel="stylesheet" type="text/css" />
+        <link href="{{asset('styles/assets/plugins/chartist-js/dist/chartist.min.css')}}" rel="stylesheet" type="text/css"/>    
+        <link href="{{asset('styles/assets/plugins/chartist-js/dist/chartist-init.css')}}" rel="stylesheet" type="text/css"/>    
+        <link href="{{asset('styles/assets/plugins/chartist-plugin-tooltip-master/dist/chartist-plugin-tooltip.css')}}" rel="stylesheet" type="text/css"/>    
+        <link href="{{asset('styles/assets/plugins/c3-master/c3.min.css')}}" rel="stylesheet" type="text/css"/>
+        <link href="{{asset('styles/css/style.css')}}" rel="stylesheet" type="text/css"/>    
+        <link href="{{asset('styles/css/colors/blue.css')}}" id="theme" rel="stylesheet" type="text/css"/>
+        {#<link href="{{asset('styles/js/dataTables/select.dataTables.min.css')}}" rel="stylesheet"  type="text/css"/>
+        <link href="{{asset('styles/js/dataTables/jquery.dataTables.min.css')}}" rel="stylesheet"  type="text/css"/>#}
+        <link href="{{asset('styles/assets/plugins/sweetalert/lib/sweet-alert.css')}}" rel="stylesheet"  type="text/css"/>
+        <link href="{{asset('styles/assets/plugins/toastr/build/toastr.min.css')}}" rel="stylesheet"  type="text/css"/>
+        <link href="{{asset('dist/css/skins/_all-skins.min.css')}}" rel="stylesheet"  type="text/css"/>
+        <link href="{{asset('dist/css/AdminLTE.min.css')}}" rel="stylesheet"  type="text/css"/>
+    </head>
+    <body class="fix-header fix-sidebar card-no-border">
+        <div class="preloader">
+            <svg class="circular" viewBox="25 25 50 50">
+                <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="2" stroke-miterlimit="10" ></circle>
+            </svg>
+        </div>
+        <div id="main-wrapper">
+            <header class="topbar step1">
+                <nav class="navbar top-navbar navbar-toggleable-sm navbar-light">
+                    <div class="navbar-header">
+                        <a class="navbar-brand" href="{{path("homepage")}}">
+                            <b>
+                                <img src="{{ asset('styles/assets/images/etecsa-logminio.png') }}" src="" alt="homepage" class="light-logo" />
+                            </b>
+                        </a>
+                        {#                        <img src="{{ asset('styles/assets/images/logo-light-text.png') }}" class="light-logo" alt="homepage" /></span> </a>#}
+                    </div>
+
+                    <div class="navbar-collapse">
+                        <ul class="navbar-nav mr-auto mt-md-0">
+                            <li class="nav-item"> <a class="nav-link nav-toggler hidden-md-up text-muted waves-effect waves-dark" href="javascript:void(0)"><i class="mdi mdi-menu"></i></a> </li>
+                            <li class="nav-item hidden-sm-down search-box"> <a class="nav-link hidden-sm-down text-muted waves-effect waves-dark" href="javascript:void(0)"><i class="ti-search"></i></a>
+                                <form class="app-search">
+                                    <input type="text" id="buscar" class="form-control" placeholder="Buscar"> <a class="srh-btn"><i class="ti-close"></i></a> 
+                                </form>
+                                <h2 class="text-success pull-right " style="margin-top: 15px">Sistema de Seguridad Y Salud Del Trabajador</h2> 
+                            </li>
+                        </ul>
+
+                        <ul class="navbar-nav my-lg-0">
+                            {#<li class="nav-item dropdown">
+                                <a href="#" class="dropdown-toggle "text-muted waves-effect waves-dark  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-bell "></i> <b class="caret"></b></a>
+                            </li>#}
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle text-muted waves-effect waves-dark" href="" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><img src="{{asset('styles/assets/images/users/user.png') }}" alt="user" class="profile-pic m-r-10" />{{ app.user.username }}</a>
+                            </li>
+
+                        </ul>
+                    </div>
+                </nav>
+            </header>
+
+            <aside class="left-sidebar">
+                <div class="scroll-sidebar">
+                    <!-- Sidebar navigation-->
+                    <nav class="sidebar-nav">
+                        <ul id="sidebarnav">
+                            <li>
+                                <a href="#" class="waves-effect waves-dark" ><i class="fa fa-warning "></i> Seguridad<span class="fa arrow"></span></a>
+                                <ul class="">
+                                    <li>
+                                        <a href="{{path('mediodeproteccion_asignar')}}">Medios de protección</a>
+                                    </li>
+                                    <li>
+                                        <a href="{{path ('accidentelaboral_index')}}"> Accidentes laborales</a>
+                                    </li>
+                                    <li>
+                                        <a href="{{path('permisoseguridad_index')}}"> Permisos </a>
+                                    </li>
+                                    <li>
+                                        <a href="{{path('medidasseguridad_index')}}"> Medidas de seguridad </a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="#" class="waves-effect waves-dark" ><i class="fa fa-heart"></i> Salud<span class="fa arrow"></span></a>
+                                <ul class="">
+                                    <li>
+                                        <a href="{{path('entregaespejuelo_index')}}"> Espejuelos</a>
+                                    </li>
+                                    <li>
+                                        <a href="{{path ('chequeomedico_index')}}"> Chequeos</a>
+                                    </li>
+                                    <li>
+                                        <a href="{{path ('asignarmedicamento_index')}}"> Medicamentos</a>
+                                    </li>
+                                    <li>
+                                        <a href="{{path ('vacuna_index')}}">Vacunas</a>
+                                    </li>
+
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="#" class="waves-effect waves-dark" ><i class="fa fa-check-square"></i> Supervisión<span class="fa arrow"></span></a>
+                                <ul class="">
+                                    <li>
+                                        <a href="{{ path('SupervisionNivel1_index') }}"> Nivel 1</a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ path("supervicionnivel2_index") }}"> Nivel 2</a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ path("supervision3") }}"> Riesgos</a>
+                                    </li>
+
+
+                                </ul>
+                            </li>  
+                            <li>
+                                <a href="#" class="waves-effect waves-dark" ><i class="fa fa-bar-chart "></i>  Reportes<span class="fa arrow"></span></a>
+                                <ul class="">
+                                    <li>
+                                        <a href="{{path('reportes')}}"> &Iacute;ndices</a>
+                                    </li>
+                                    <li>
+                                        <a href="{{path("reporte_areas")}}"> Reporte de U/O</a>
+                                    </li>
+                                    <li>
+                                        <a href="{{path("comparativas")}}"> Comparativas</a>
+                                    </li>
+                                    <li>
+                                        <a href="{{path("listarFicha")}}"> Ficha del trabajador</a>
+                                    </li>
+
+                                </ul>
+                            </li> 
+                            {% if is_granted('ROLE_ADMIN') %}
+                            <li>
+                                <a href="#"class="waves-effect waves-dark" ><i class="fa fa-cogs fa-3x"></i> Administración<span class="fa arrow"></span></a>
+                                <ul class="">
+                                    <li>
+                                        <a href="{{path('usuario_index')}}"> Usuarios</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Nomencladores<span class="fa arrow"></span></a>
+                                        <ul class="">
+                                            <li>
+                                                <a href="{{ path('gestMedios') }}">Medios de protección</a>
+                                            </li>
+                                            {# <li>
+                                                 <a href="gestion_trabajador.html">Trabajadores</a>
+                                             </li>#}
+                                            <li>
+                                                <a href="#">Unidad Organizativa</a>
+                                            </li>
+                                            {#<li>
+                                                <a href="#">Trabajos</a>
+                                            </li>#}
+                                            <li>
+                                                <a href="{{ path('trabajador') }}">Trabajadores</a>
+                                            </li>
+                                        </ul>
+
+                                    </li>
+                                    {# <li>
+                                         <a href="#" class="run-tour">Tour descriptivo</a>
+                                     </li>#}
+                                    <li>
+                                        <a href="{{path('trazas')}}"></i> Trazas</a>
+                                    </li>
+                                    {#<li>
+                                        <a href="BD.html">Base de Datos</a>
+                                    </li>#}
+
+                                </ul>
+                            </li> 
+                            {% endif %}
+                        </ul>
+
+                    </nav>
+                </div>
+                <div class="sidebar-footer">
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <a href="{{path('config')}}" class="link" data-toggle="tooltip" title="Ajustes"><i class="ti-settings"></i></a>
+                    {% endif %}
+                    {#<a href="{{path('notificaciones')}}" class="link" data-toggle="tooltip" title="Notificaciones"><i class="mdi mdi-bell-ring"><?php  echo ''.$_SESSION['total']?></i></a>#}
+                    <a href="{{path('notificaciones')}}" class="link" data-toggle="tooltip" title="Notificaciones"><i class="mdi mdi-bell-ring">{{total}}</i></a>
+                    <a href="{{path('logout')}}" class="link" data-toggle="tooltip" title="Salir"><i class="mdi mdi-power"></i></a> </div>
+            </aside>
+            <div class="page-wrapper">
+                <div class="container-fluid">
+                    {% block body  %}{% endblock %}
+                </div>
+                <footer class="footer"> © 2019 Sistema para la Salud y la protección del Trabajador. Etecsa </footer>
+            </div>
+            <a href="#" id="btn-scroll-up" class="mdi mdi-chevron-double-up pull-right fa-2x"></a>
+        </div>
+
+
+        <script src="{{asset('styles/js/jquery-3.3.1.js')}}"></script>
+        <script src="{{asset('styles/assets/plugins/bootstrap/js/tether.min.js')}}"></script> 
+        <script src="{{asset('styles/assets/plugins/bootstrap/js/bootstrap.min.js')}}"></script> 
+        <script src="{{asset('styles/js/jquery.slimscroll.js')}}"></script> 
+        <script src="{{asset('styles/js/waves.js')}}"></script> 
+        <script src="{{asset('styles/js/sidebarmenu.js')}}"></script> 
+        <script src="{{asset('styles/assets/plugins/sticky-kit-master/dist/sticky-kit.min.js')}}"></script> 
+        <script src="{{asset('styles/js/custom.min.js')}}"></script> 
+        <script src="{{asset('styles/assets/plugins/chartist-js/dist/chartist.min.js')}}"></script> 
+        <script src="{{asset('styles/assets/plugins/chartist-plugin-tooltip-master/dist/chartist-plugin-tooltip.min.js')}}"></script> 
+        <script src="{{asset('styles/assets/plugins/d3/d3.min.js')}}"></script> 
+        <script src="{{asset('styles/assets/plugins/c3-master/c3.min.js')}}"></script> 
+        {#<script src="{{asset('styles/js/dataTables/jquery.dataTables.min.js')}}"></script>
+        <script src="{{asset('styles/js/dataTables/dataTables.bootstrap.js')}}"></script>
+        <script src="{{asset('styles/js/dataTables/dataTables.select.min.js')}}"></script>#}
+        <script src="{{asset('styles/assets/plugins/sweetalert/lib/sweet-alert.min.js')}}"></script>
+        <script src="{{asset('styles/assets/plugins/toastr/build/toastr.min.js')}}"></script>
+        <script src="{{asset('styles/js/dataForTables.js')}}"></script>
+        <script src="{{asset('dist/js/demo.js')}}"></script> 
+        <script src="{{asset('plugins/slimScroll/jquery.slimscroll.min.js')}}"></script> 
+        <script src="{{asset('plugins/fastclick/fastclick.min.js')}}"></script>
+        <script src="{{asset('dist/js/app.min.js')}}"></script>
+        <script src="{{asset('plugins/chartjs/Chart.min.js')}}"></script> 
+        <script src="{{asset('styles/assets/plugins/bootstrap-tour/build/js/bootstrap-tour.min.js')}}"></script>
+        <script>
+            // Instance the tour
+            var tour = new Tour({
+                backdrop: true,
+                onShown: function (tour) {
+
+                    // ISSUE    - https://github.com/sorich87/bootstrap-tour/issues/189
+                    // FIX      - https://github.com/sorich87/bootstrap-tour/issues/189#issuecomment-49007822
+
+                    // You have to write your used animated effect class
+                    // Standard animated class
+                    $('.animated').removeClass('fadeIn');
+                    // Animate class from animate-panel plugin
+                    $('.animated-panel').removeClass('zoomIn');
+
+                },
+                steps: [
+                    {
+                        element: ".step1",
+                        title: "Page header",
+                        content: "Place your page title and breadcrumb. Select small or large header or give the user choice to change the size.",
+                        placement: "bottom"
+                    },
+                ]});
+
+            // Restart the tour
+            $('.run-tour').click(function () {
+                tour.init();
+                tour.restart();
+            });
+
+            var flag = true;
+            $("#buscar").keyup(function (ev) {
+                {#console.log(ev.key)#}
+                if (ev.key === "Enter") {
+                    $.ajax({
+                        type: 'GET',
+                        url: "buscar",
+                        dataType: 'json',
+                        data: {
+                            data: $("#buscar").val(),
+                        },
+                        success: function (response) {
+                            if (response.success === true) {
+                                console.info("Busqueda hecha");
+                                flag = true;
+                            } else {
+                                console.info("no se busco");
+                                flag = false;
+                            }
+
+                        }
+                    });
+                    if (flag) {
+                        window.location = "empty";
+                    } else {
+                        window.location = "showBuscar";
+
+                    }
+                }
+                console.info("apreto algo" + $("#buscar").val());
+            });
+
+        </script>
+        {% block javascripts %}{% endblock %}
+    </body>
+</html>

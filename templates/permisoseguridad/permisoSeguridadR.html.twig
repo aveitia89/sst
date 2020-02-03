@@ -1,0 +1,327 @@
+{% extends 'base.html.twig' %}
+{% block stylesheets %}
+    <link href="{{ asset('etecsa/exportarTabla/css/buttons.dataTables.min.css') }}" rel="stylesheet" type="text/css" />
+{% endblock %}
+{% block contenido %}
+    <div class="box">
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <h1 style="text-align: center">Gestión de Permiso de Seguridad</h1>
+                    </div>
+                </div>
+                <br/>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="panel-body col-lg-1">
+                            <a href="#nuevoUser" data-toggle="modal" class="btn btn-facebook" data-placement="top" title="Insertar nuevo permiso de seguridad">Insertar</a>
+                            <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="nuevoUser" class="modal fade">
+                                <div class="modal-dialog" style="width: 850px; height: auto">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button aria-hidden="true" data-dismiss="modal" class="close" type="button">×
+                                            </button>
+                                            <h4 class="modal-title" style="text-align: center">Registrar permiso de seguridad</h4>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="row">
+                                                <div class="row">
+                                                    <div class="col-lg-12">
+                                                        <div class="form-group col-lg-4" id="sandbox-container">
+                                                            <label>Fecha de ejecución</label>
+                                                            <input style="text-align: center" name="fecha" type="text" id="fecha"
+                                                                   class="form-control round-input" required="required">
+                                                        </div>
+                                                        <div class="form-group col-lg-4" >
+                                                            <label>Orden de trabajo</label>
+                                                            <input name="orden" type="text"
+                                                                   id="orden" class="form-control round-input"
+                                                                   required="required">
+                                                        </div>
+                                                        <div class="form-group col-lg-4" >
+                                                            <label>Jefe que ordena</label> {#Aqui solo deben aparecer los cargos que tienen jefe de operaciones y jefes de centro#}
+                                                            <select class="form-control" name="idordena" id="idordena" required="required">
+                                                                <option value="">Seleccionar</option>
+                                                                {% for trab in rabajadorOrdena %}
+                                                                    <option style="text-align: center" value="{{ trab.id }}">{{ trab.nombre }} {{ trab.apellidos }} {{ trab.segundoApellido }}</option>
+                                                                {% endfor %}
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-lg-12">
+                                                        <div class="form-group col-lg-3">
+                                                            <label>Jefe que emite</label> {#Aqui solo deben aparecer los cargos que tienen jefe de operaciones y jefes de brigada#}
+                                                            <select class="form-control" name="idemite" id="idemite" required="required">
+                                                                <option value="">Seleccionar</option>
+                                                                {% for trab in trabajadorEmite %}
+                                                                    <option style="text-align: center" value="{{ trab.id }}">{{ trab.nombre }} {{ trab.apellidos }} {{ trab.segundoApellido }}</option>
+                                                                {% endfor %}
+                                                            </select>
+                                                        </div>
+                                                        <div class="form-group col-lg-3" >
+                                                            <label>Lugar de ejecución</label>
+                                                            <select class="form-control" name="idemite" id="idemite" required="required">
+                                                                <option value="">Seleccionar</option>
+                                                                {% for trab in lugarEjecucion %}
+                                                                    <option style="text-align: center" value="{{ trab.id }}">{{ trab.lugar }}-{{ trab.direccion }}</option>
+                                                                {% endfor %}
+                                                            </select>
+{#                                                            <input name="lugarEjecucion" type="text"#}
+{#                                                                   id="lugarEjecucion" class="form-control round-input"#}
+{#                                                                   required="required">#}
+                                                        </div>
+                                                        <div class="form-group col-lg-3" >
+                                                            <label>Horas de comienzo</label>
+                                                            <input name="horarioInicio" type="time"
+                                                                   id="horarioInicio" class="form-control round-input"
+                                                                   required="required">
+                                                        </div>
+                                                        <div class="form-group col-lg-3" >
+                                                            <label>Horas de terminación</label>
+                                                            <input name="horarioFin" type="time"
+                                                                   id="horarioFin" class="form-control round-input"
+                                                                   required="required">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-lg-12">
+                                                        <div class="form-group col-lg-6">
+                                                            <label>Trabajadores que ejecutan</label> {#Aqui solo deben aparecer los cargos de los operarios#}
+                                                            <select class="form-control" name="idejecuta" id="idejecuta" required="required">
+                                                                <option value="">Seleccionar</option>
+                                                                {% for trab in trabajadorEjecuta %}
+                                                                    <option style="text-align: center" value="{{ trab.id }}">{{ trab.nombre }} {{ trab.apellidos }} {{ trab.segundoApellido }}</option>
+                                                                {% endfor %}
+                                                            </select>
+                                                        </div>
+                                                        <div class="form-group col-lg-6">
+                                                            <label>Medidas de seguridad</label> {#aqui van las medidas#}
+                                                            <select class="form-control" name="medida" id="medida" required="required">
+                                                                <option value="">Seleccionar</option>
+                                                                {% for medidas in medidasSeguridad %}
+                                                                    <option style="text-align: center" value="{{ medidas.id }}">{{ medidas.descripcion }}</option>
+                                                                {% endfor %}
+                                                            </select>
+                                                        </div>
+                                                        <div class="form-group col-lg-12">
+                                                            <label>Descripción</label>
+                                                            <textarea style="text-align: center" name="descripcion" rows="4" type="" id="descripcion" class="form-control round-input" required="required"></textarea>
+                                                        </div>
+                                                    </div>   
+                                                </div>
+
+                                            </div>
+                                            <button type="submit" class="btn btn-facebook insertar">Insertar</button>
+                                        </div>                                        
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel-body col-lg-1">
+                            <a href="#nuevoUser1" data-toggle="modal" class="btn btn-facebook" data-placement="top" title="Permisos de Seguridad emitidos por rango fecha y Unidad Organizativa">Emitidos</a>
+                            <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="nuevoUser1" class="modal fade">
+                                <div class="modal-dialog" style="width: 500px; height: auto">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button aria-hidden="true" data-dismiss="modal" class="close" type="button">×
+                                            </button>
+                                            <h4 class="modal-title" style="text-align: center">Emitidos por rango fecha y Unidad Organizativa</h4>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="row">
+                                                <div class="row">
+                                                    <div class="col-lg-12">
+                                                        <div class="form-group col-lg-6">
+                                                            <label>Rango de Fecha:</label>
+                                                            <div class="input-group">
+                                                                <div class="input-group-addon">
+                                                                    <i class="fa fa-calendar"></i>
+                                                                </div>
+                                                                <input name="rangoFecha" id="rangoFecha" type="text" class="form-control pull-right rango">
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group col-lg-6" style="text-align: center">
+                                                            <label>Unidad Organizativa</label>
+                                                            <select class="form-control" name="uo" id="uo"
+                                                                    required="required">
+                                                                <option value=""></option>
+                                                                {% for uo in unidadOrganizativa %}
+                                                                    <option value="{{ uo.id }}">{{ uo.nombre }}</option>
+                                                                {% endfor %}
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <button type="submit" class="btn btn-facebook permisoUOF">Insertar</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <!-- Example DataTables Card-->
+                            <div class="box-body listar">
+                                <img class="loading3" src="{{ asset('etecsa/img/loadingBig.gif') }}" style="width: 100px;height: 100px; margin-left: 40%; margin-top: 10%; text-align: center">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block javascripts %} 
+    <script src="{{ asset('etecsa/exportarTabla/js/dataTables.buttons.min.js') }}"></script>
+    <script src="{{ asset('etecsa/exportarTabla/js/buttons.flash.min.js') }}"></script>
+    <script src="{{ asset('etecsa/exportarTabla/js/jszip.min.js') }}"></script>
+    <script src="{{ asset('etecsa/exportarTabla/js/pdfmake.min.js') }}"></script>
+    <script src="{{ asset('etecsa/exportarTabla/js/vfs_fonts.js') }}"></script>              
+    <script src="{{ asset('etecsa/exportarTabla/js/buttons.html5.min.js') }}"></script>
+    <script src="{{ asset('etecsa/exportarTabla/js/buttons.print.min.js') }}"></script>
+    <script>
+        {{ parent() }}
+        $(document).ready(function() {
+            fechitas();
+            function fechitas() {
+                $('.rango').daterangepicker({
+                    "autoApply": true,
+                    autoclose: true,
+                    language: "es",
+                    "locale": {
+                        "format": "DD.MM.YYYY",
+                        "separator": "-",
+                        "applyLabel": "Apply",
+                        "cancelLabel": "Cancel",
+                        "fromLabel": "From",
+                        "toLabel": "To",
+                        "customRangeLabel": "Custom",
+                        "weekLabel": "W",
+                        "daysOfWeek": [
+                            "Do",
+                            "Lu",
+                            "Ma",
+                            "Mi",
+                            "Ju",
+                            "Vi",
+                            "Sa"
+                        ],
+                        "monthNames": [
+                            "Enero",
+                            "Febrero",
+                            "Marzo",
+                            "Abril",
+                            "Mayo",
+                            "Junio",
+                            "Julio",
+                            "Agosto",
+                            "Septiembre",
+                            "Octubre",
+                            "Noviembre",
+                            "Diciembre"
+                        ],
+                        "firstDay": 0
+                    },
+
+                    "startDate": "{{  "now" | date("d/m/Y") }}",
+                    "endDate": "{{ "now" | date("d/m/Y") }}",
+                    "opens": "center",
+                    "drops": "down"
+                },)
+            };
+        });
+    </script>
+    <script>
+        $.post("{{ path('permisoseguridadAjax')}}", function (data) {
+            $('.listar').html(data);
+        });
+    </script>
+    <script>
+        $(".insertar").click(function (event) {
+            var orden = document.getElementById("orden").value;
+            var lugarEjecucion = document.getElementById("lugarEjecucion").value;
+            var descripcion = document.getElementById("descripcion").value;
+            var fecha = document.getElementById("fecha").value;
+            var idordena = document.getElementById("idordena").value;
+            var idemite = document.getElementById("idemite").value;
+
+            var horarioInicio = document.getElementById("horarioInicio").value;
+            var horarioFin = document.getElementById("horarioFin").value;
+            var idejecuta = document.getElementById("idejecuta").value;
+            var medida = document.getElementById("medida").value;
+
+            var path = '{{ path("Insertarpermisoseguridad", {'orden': 'xx','lugar': 'xx','descripcion': 'xx','fecha': 'xx','horarioInicio': 'xx','horarioFin': 'xx','idordena': 'xx','idemite': 'xx','idejecuta': 'xx'}) }}';
+            path = path.replace("xx", orden);
+            path = path.replace("xx", lugarEjecucion);
+            path = path.replace("xx", descripcion);
+            path = path.replace("xx", fecha);
+            path = path.replace("xx", horarioInicio);
+            path = path.replace("xx", horarioFin);
+            path = path.replace("xx", idordena);
+            path = path.replace("xx", idemite);
+            path = path.replace("xx", idejecuta);
+            path = path.replace("xx", medida);
+
+            $.ajax({
+                url: path,
+                data: {},
+                type: 'POST',
+                dataType: '',
+                success: function (data) {
+                    $('.listar').html(data);
+                    $("#nuevoMed").modal('hide');
+                },
+                error: function (data) {
+                    alert("Error");
+                },
+                complete: function (data) {
+                    swal({
+                        position: 'top-end',
+                        icon: 'success',
+                        title: 'Se ha insertado correctamente',
+                        showConfirmButton: false,
+                        timer: 1500,
+                        type: "success",
+                        showCancelButton: false,
+                        closeOnConfirm: true
+                    })
+                }
+            });
+        });
+    </script>
+    <script>
+        $(".permisoUOF").click(function (event) {
+            var rangoFecha = document.getElementById("rangoFecha").value;
+            var uo = document.getElementById("uo").value;
+
+            var path = '{{ path("rangoUO", {'rangoF': 'xx','unidadO': 'xx'}) }}';
+            path = path.replace("xx", rangoFecha);
+            path = path.replace("xx", uo);
+
+            $.ajax({
+                url: path,
+                data: {},
+                type: 'POST',
+                dataType: '',
+                success: function (data) {
+                    $('.listar').html(data);
+                    $("#nuevoUser1").modal('hide');
+                },
+                error: function (data) {
+                    alert("Error");
+                },
+            });
+        });
+    </script>
+{% endblock %}

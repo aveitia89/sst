@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <link href="{{asset('styles/assets/plugins/bootstrap/css/bootstrap.min.css')}}"rel="stylesheet" type="text/css" />    
+        <link href="{{asset('styles/assets/plugins/bootstrap-tour/build/css/bootstrap-tour.min.css')}}" rel="stylesheet" type="text/css"/> 
+        {#        <link href="{{asset('styles/assets/plugins/chartist-js/dist/chartist.min.css')}}" rel="stylesheet" type="text/css"/>    #}
+        {#        <link href="{{asset('styles/assets/plugins/chartist-js/dist/chartist-init.css')}}" rel="stylesheet" type="text/css"/>    #}
+        {#        <link href="{{asset('styles/assets/plugins/chartist-plugin-tooltip-master/dist/chartist-plugin-tooltip.css')}}" rel="stylesheet" type="text/css"/>    #}
+        <link href="{{asset('styles/assets/plugins/c3-master/c3.min.css')}}" rel="stylesheet" type="text/css"/>    
+
+        <link href="{{asset('styles/css/style.css')}}" rel="stylesheet" type="text/css"/>    
+        <link href="{{asset('styles/css/colors/blue.Cscss')}}" id="theme" rel="stylesheet" type="text/css"/>
+        <link href="{{asset('styles/js/dataTables/select.dataTables.min.css')}}" rel="stylesheet"  type="text/css"/>
+        <link href="{{asset('styles/js/dataTables/jquery.dataTables.min.css')}}" rel="stylesheet"  type="text/css"/>
+        <link href="{{asset('styles/assets/plugins/sweetalert/lib/sweet-alert.css')}}" rel="stylesheet"  type="text/css"/>
+        <link href="{{asset('styles/assets/plugins/toastr/build/toastr.min.css')}}" rel="stylesheet"  type="text/css"/>
+        {#        <link href="{{asset('dist/css/skins/_all-skins.min.css')}}" rel="stylesheet"  type="text/css"/>#}
+        {#        <link href="{{asset('dist/css/AdminLTE.min.css')}}" rel="stylesheet"  type="text/css"/>#}
+    </head>
+    <body onload="window.print();" class="col-offset-2">
+        <div class="row">
+            <div class="col-md-12">
+                <h2>Ficha del trabajador </h2>   
+
+            </div>
+        </div>
+        <hr />
+        <div class="content animate-panel" >
+            <div class="row">
+                <div class="col-lg-4">
+                    <div class="hpanel hgreen">
+                        <div class="panel-body">
+                            <img alt="logo" class="img-circle m-b m-t-md" src="../styles/assets/images/users/user.png">
+                            <h3><a href="">{{trabajador.nombre}} {{trabajador.primer_apellido}}</a></h3>
+                            <div class="text-muted font-bold m-b-xs">U/O: {{trabajador.unidadOrganizativa}}</div>
+                            <div class="hpanel stats">
+                                <div class="panel-body ">
+                                    <div class="row ">
+                                        <small class=" col-md-6 pull-left">
+                                            Chequeos
+                                        </small>
+                                        <small class="pull-right col-md-6">
+                                            Vacunas
+                                        </small>
+                                    </div>
+                                    <div class="row ">
+                                        <div class="col-lg-6 ">
+                                            <h3 class="no-margins font-extra-bold text-success">{{chequeos[1]}} <i class="fa fa-level-up text-success"></i> </h3>
+                                            <br>
+                                            <h3 class="no-margins font-extra-bold text-success">{{chequeos[4]}} <i class="fa fa-level-down text-danger"></i></h3>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <h3 class=" no-margins font-extra-bold text-success ">{{vacunas[0]}}<i class="fa fa-level-up text-success"></i> </h3>
+                                            <br>
+                                            <h3 class="no-margins font-extra-bold text-success ">{{vacunas[1]}} <i class="fa fa-level-down text-warning"></i></h3>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="panel-body ">
+                                    <div class="row ">
+                                        <small class=" col-md-6 pull-left">
+                                            Accidentes
+                                        </small>
+                                        <small class="pull-right col-md-6">
+                                            Medios asignados
+                                        </small>
+                                    </div>
+                                    <div class="row ">
+                                        <div class="col-lg-6 ">
+                                            <h3 class="no-margins font-extra-bold text-success">{{accidentes[0]}} </h3>
+                                        </div>
+                                        <div class="col-lg-6 ">
+                                            <h3 class="no-margins font-extra-bold text-success "> {{medios[0]}}</h3>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="border-right border-left">
+                                    <section id="map">
+                                        <div id="map1" style="height: 20px"></div>
+                                    </section>
+                                </div>
+                                <div class="panel-body">
+                                    <dl>
+                                        <dt>Carne de identidad</dt>
+                                        <dd>{{trabajador.ci}}</dd>
+                                        <dt>Cargo</dt>
+                                        <dd>{{trabajador.posicion}}</dd>
+                                        <dt>Area de personal</dt>
+                                        <dd>{{trabajador.areaDePersonal}}</dd>
+                                        <dt>Dirección particular</dt>
+                                        <dd>{{trabajador.calleYNumero}} {{trabajador.entreCalles}}</dd>
+                                        <dd># Municipio :{{trabajador.municipo}}</dd>
+                                    </dl>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-8">
+                    <div class="hpanel">
+                        <div class="panel-heading">
+                            <p class="help-block">Historial de actividad</p>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-striped table-bordered table-hover" id="dataTables">
+                                <thead>
+                                    <tr>
+                                        <th>Fecha</th>
+                                        <th>Detalles</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for obj in historial %}
+                                        {% set var= obj.fecha %}
+                                        {% set fecha=var.format("d-m-Y") %}
+                                        <tr class="gradeC">
+                                            <td>{{ fecha }}</td>
+                                            <td>{{obj.detalles}}</td>
+                                        </tr>{% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </body>
+        {% block stylesheets %}
+
+            <script src="{{asset('styles/js/dataTables/jquery.dataTables.min.js')}}"></script>
+            <script src="{{asset('styles/js/dataTables/dataTables.bootstrap.js')}}"></script>
+            <script src="{{asset('styles/js/dataTables/dataTables.select.min.js')}}"></script>
+            <script src="{{asset('styles/js/dataTables/Spanish.json')}}"></script>
+            <script src="{{asset('styles/assets/plugins/sweetalert/lib/sweet-alert.min.js')}}"></script>
+            <script src="{{asset('styles/assets/plugins/toastr/build/toastr.min.js')}}"></script>
+            <script src="{{asset('styles/js/dataForTables.js')}}"></script>
+            <script src="{{asset('dist/js/demo.js')}}"></script> 
+            <script src="{{asset('plugins/fastclick/fastclick.min.js')}}"></script> 
+            <script src="{{asset('dist/js/app.min.js')}}"></script> 
+
+
+            <script>
+        $(document).ready(function () {
+            $('#dataTables').DataTable({
+                "language": {
+                    "infoFiltered": " - filtering from _MAX_ filas",
+                    "lengthMenu": " _MENU_  registros",
+                    "sSearch": "Buscar:",
+                    "sInfo": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+                    "oPaginate": {
+                        "sFirst": "Primero",
+                        "sLast": "Último",
+                        "sNext": "Siguiente",
+                        "sPrevious": ""
+                    },
+                }
+            });
+        });//fin documentready
+
+
+            </script>
+
+        {% endblock %}
+    </html>

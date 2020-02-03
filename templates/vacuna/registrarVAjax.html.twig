@@ -1,0 +1,183 @@
+<table id="dataTable" style="font-size: 90%" class="table table-striped table-bordered table-hover table-responsive" cellspacing="0">
+    <thead>
+    <tr>
+        <th style="width: 14%;text-align: center"><i class="icon_profile"></i> Fecha</th>
+        <th style="width: 14%;text-align: center"><i class="icon_profile"></i> U. Organizativa</th>
+        <th style="width: 14%;text-align: center"><i class="icon_profile"></i> Trabajador</th>
+        <th style="width: 14%;text-align: center"><i class="icon_profile"></i> Vacuna</th>
+        {% if is_granted('ROLE_ESPECIALISTA') %}
+        <th style="width: 14%;text-align: center"><i class="icon_cogs"></i>Eliminar</th>
+        {% endif %}
+        {#<th style="width: 14%;text-align: center"><i class="icon_cogs"></i> Editar/Eliminar</th>#}
+    </tr>
+    </thead>
+    <tbody>
+    {% for vacunas in vacunasTrabajador %}
+        <tr>
+            <td style="width: 14%;text-align: center">{{ vacunas.fecha | date('d.m.Y') }}</td>
+            <td style="width: 14%;text-align: center">{{ vacunas.idTrabajador.idUnidadOrganizativa.nombre }}</td>
+            <td style="width: 14%;text-align: center">{{ vacunas.idTrabajador.nombre }} {{ vacunas.idTrabajador.apellidos }} {{ vacunas.idTrabajador.segundoApellido }}</td>
+            <td style="width: 14%;text-align: center">{{ vacunas.idVacuna.nombreVacuna }}</td>
+            {% if is_granted('ROLE_ESPECIALISTA') %}
+            <td style="width: 14%;text-align: center">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="btn-group">
+                            {#<a href="#Modal-{{ vacunas.id }}" dir="{{ vacunas.id }}" data-toggle="modal" data-placement="top" title="Editar vacunación"><i class="btn btn-facebook fa fa-edit"></i></a>
+                            <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="Modal-{{ vacunas.id }}" class="modal fade">
+                                <div class="modal-dialog" style="width: 500px; height: auto">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button aria-hidden="true" data-dismiss="modal" class="close" type="button">×
+                                            </button>
+                                            <h4 class="modal-title" style="text-align: center">Registrar vacunación</h4>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="row">
+                                                <div class="row">
+                                                    <div class="col-lg-12">
+                                                        <div class="form-group col-lg-5">
+                                                            <label>Trabajador</label>
+                                                            <select class="form-control" name="trabajador" id="trabajador" required="required">
+                                                                <option value="">Seleccionar</option>
+                                                                {% for trab in trabajadores %}
+                                                                    <option style="text-align: center"
+                                                                            {% if vacunas.idTrabajador.id == trab.id %}
+                                                                                selected
+                                                                            {% endif %}
+                                                                            value="{{ trab.id }}">{{ trab.nombre }} {{ trab.apellidos }} {{ trab.segundoApellido }}</option>
+                                                                {% endfor %}
+                                                            </select>
+                                                        </div>
+                                                        <div class="form-group col-lg-1"></div>
+                                                        <div class="form-group col-lg-6">
+                                                            <label>Vacuna aplicada</label>
+                                                            <select class="form-control" name="vacunas" id="vacunas" required="required">
+                                                                <option value="">Seleccionar</option>
+                                                                {% for vacuna in vacunasE %}
+                                                                    <option style="text-align: center"
+                                                                            {% if vacunas.idVacuna.id == vacuna.id %}
+                                                                                selected
+                                                                            {% endif %}
+                                                                            value="{{ vacuna.id }}">{{ vacuna.nombreVacuna }}</option>
+                                                                {% endfor %}
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-lg-12">
+                                                        <div class="form-group col-lg-6" id="sandbox-container" >
+                                                            <label>Fecha de aplicación</label>
+                                                            <input style="text-align: center" name="fechaAplicacion" type="text" id="fechaAplicacion"
+                                                                   class="form-control round-input" required="required" value="{{ vacunas.fecha | date('d.m.Y') }}">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <button type="submit" class="btn btn-facebook insertar">Insertar</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>#}
+                            <a href="#ModalE-{{ vacunas.id }}" dir="{{ vacunas.id }}" data-toggle="modal" data-placement="top" title="Eliminar vacunación"><i class="btn btn-facebook fa fa-trash-o"></i></a>
+                            <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="ModalE-{{ vacunas.id }}" class="modal fade">
+                                <div class="modal-dialog" style="text-align: center">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button aria-hidden="true" data-dismiss="modal" class="close" type="button">×</button>
+                                            <h4 class="modal-title">Eliminar registro</h4>
+                                        </div>
+                                        <div class="alert alert-block alert-danger fade in" style="text-align: center">
+                                            <button data-dismiss="alert" class="close close-sm" type="button">
+                                                <i class="icon-remove"></i>
+                                            </button>
+                                            <strong>¿ Está seguro que desea eliminar?</strong><br><br>
+                                            <div class="form-group">
+                                                <div class="row">
+                                                    <div class="col-lg-1">
+                                                        <input hidden dir="{{ vacunas.id }}" id="idvacuna" name="vacuna{{ vacunas.id }}" type="text" value="{{ vacunas.id }}">
+                                                        <button type="submit" class="btn btn-danger eliminar" id="eliminar{{ vacunas.id }}" dir="{{ vacunas.id }}" >Aceptar</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </td>
+            {% endif %}
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+<script>
+    $(document).ready(function () {
+        $('#dataTableAsignar').DataTable({
+            dom: 'Bfrtip',
+            buttons: [
+                /*'copy', 'csv',*/ 'excel', 'pdf'
+            ],
+            "lengthMenu": [[5,10, 25, 50, 100], [5,10, 25, 50, 100]]
+        });
+    });
+</script>
+<script>
+    $(document).ready(function () {
+        var t = $('#dataTable').DataTable({
+            dom: 'Bfrtip',
+            buttons: [
+                /*'copy', 'csv',*/ 'excel', 'pdf'
+            ],
+            "bSort" : false,
+            "language": {
+                "infoFiltered": " - filtering from _MAX_ filas",
+                "lengthMenu": "Registros: _MENU_  ",
+                "sSearch": "Buscar:",
+                "sInfo": "Registros del _START_ al _END_ de un total de _TOTAL_ registros",
+                "Info": false,
+                "oPaginate": {
+                    "sFirst": "Primero",
+                    "sLast": "Último",
+                    "sNext": "Siguiente",
+                    "sPrevious": "Anterior"
+                },
+            }
+        });
+    });
+</script>
+<script>
+    $(".eliminar").click(function(event){
+        var enviar = $(this).attr('dir');
+        $("#ModalE-"+enviar+"").modal('hide');
+        var id = $('input[name="vacuna'+enviar+'"]').val();
+        var path ='{{ path("eliminarVacunaTrabajador", {'id': 'xx'}) }}';
+        path = path.replace("xx", id);
+
+        $.ajax({
+            url : path,
+            data : {},
+            type : 'POST',
+            dataType : '',
+            success : function(data) {
+                $('.listar').html(data);
+            },
+            error : function(xhr, status) {
+                alert(xhr.message);
+            },
+            complete : function(xhr, status) {
+                swal({
+                    position: 'top-end',
+                    icon: 'success',
+                    title: 'Se ha eliminado correctamente.',
+                    showConfirmButton: false,
+                    timer: 1500,
+                    type: "success",
+                    showCancelButton: false,
+                    closeOnConfirm: true
+                })
+            }
+        });
+    });
+</script>

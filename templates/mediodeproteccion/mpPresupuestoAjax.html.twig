@@ -1,0 +1,136 @@
+<table id="dataTable" style="font-size: 90%" class="table table-striped table-bordered table-hover table-responsive" cellspacing="0">
+    <thead>
+    <tr>
+
+        <th style="width: 14%;text-align: center"><i class="icon_profile"></i> Descripción</th>
+        <th style="width: 14%;text-align: center"><i class="icon_profile"></i> Costo</th>
+       {# <th style="width: 14%;text-align: center"><i class="icon_profile"></i> Cant. Entregada</th>#}
+        <th style="width: 14%;text-align: center"><i class="icon_profile"></i> Presupuesto</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% set totalP = 0 %}
+    {% set totalC = 0 %}
+    {% set totalCE = 0 %}
+    {% for medios in mediosPresupuesto %}
+        {% set prespuesto = 0 %}
+        <tr>
+            <td style="width: 14%;text-align: center">{{ medios.idMedios.descripcion }}</td>
+            {% set totalC = medios.idMedios.costo  + totalC %}
+            <td style="width: 14%;text-align: center">$ {{ medios.idMedios.costo }}</td>
+            {#{% set totalCE = medios.cantidad   + totalCE %}
+            <td style="width: 14%;text-align: center">{{ medios.cantidad }}</td>#}
+            {% set prespuesto = medios.idMedios.costo * medios.cantidad %}
+            <td style="width: 14%;text-align: center">$ {{ prespuesto }}</td>
+            {% set totalP = prespuesto + totalP %}
+        </tr>
+    {% endfor %}
+    <tr>
+        <td style="width: 14%;text-align: center">Total</td>
+        <td style="width: 14%;text-align: center">$ {{ totalC }}</td>
+        {#<td style="width: 14%;text-align: center">{{ totalCE }}</td>#}
+        <td style="width: 14%;text-align:center">$ {{ totalP }}</td>
+    </tr>
+    </tbody>
+</table>
+<script>
+    $(document).ready(function () {
+        $('#dataTable').DataTable({
+            dom: 'Bfrtip',
+            buttons: [
+                /*'copy', 'csv',*/ 'excel', 'pdf', 'print'
+            ],
+            "lengthMenu": [[15, 25, 50, 100], [15, 25, 50, 100]]
+            /*"bSort" : false,*/
+        });
+    });
+</script>
+<script>
+    $(".eliminar").click(function(event){
+        var enviar = $(this).attr('dir');
+        $("#ModalE-"+enviar+"").modal('hide');
+        var id = $('input[name="medio'+enviar+'"]').val();
+        var path ='{{ path("mediodeproteccion_delete", {'id': 'xx'}) }}';
+        path = path.replace("xx", id);
+
+        $.ajax({
+            url : path,
+            data : {},
+            type : 'POST',
+            dataType : '',
+            success : function(data) {
+                $('.listarMedio').html(data);
+            },
+            error : function(xhr, status) {
+                alert(xhr.message);
+            },
+            complete : function(xhr, status) {
+                swal({
+                    position: 'top-end',
+                    icon: 'success',
+                    title: 'Se ha eliminado correctamente.',
+                    showConfirmButton: false,
+                    timer: 1500,
+                    type: "success",
+                    showCancelButton: false,
+                    closeOnConfirm: true
+                })
+            }
+        });
+    });
+</script>
+<script>
+    $(".editar").click(function(event) {
+        var enviar = $(this).attr('dir');
+        $("#Modal-" + enviar + "").modal('hide');
+
+        var descripcion = document.getElementById("descripcion"+enviar).value;
+        var vidautil = document.getElementById("vidautil"+enviar).value;
+        var codigo = document.getElementById("codigo"+enviar).value;
+        var talla = document.getElementById("talla"+enviar).value;
+        if (talla == "")
+        {
+            var tallas = 'nulo';
+        }
+        else
+        {
+            var tallas = talla;
+        }
+        var cantidad = document.getElementById("cantidad"+enviar).value;
+        var costo = document.getElementById("costo"+enviar).value;
+
+        var path ='{{ path("mediodeproteccion_edit", {'id': 'xx','descripcion': 'xx','vidautil': 'xx','codigo': 'xx','idtalla': 'xx','cantidad': 'xx','costo': 'xx'}) }}';
+        path = path.replace("xx", enviar);
+        path = path.replace("xx", descripcion);
+        path = path.replace("xx", vidautil);
+        path = path.replace("xx", codigo);
+        path = path.replace("xx", tallas);
+        path = path.replace("xx", cantidad);
+        path = path.replace("xx", costo);
+
+        $.ajax({
+            url : path,
+            data : {},
+            type : 'POST',
+            dataType : '',
+            success : function(data) {
+                $('.listar').html(data);
+            },
+            error : function(xhr, status) {
+                alert(xhr.message);
+            },
+            complete : function(xhr, status) {
+                swal({
+                    position: 'top-end',
+                    icon: 'success',
+                    title: 'Se ha insertado correctamente.',
+                    showConfirmButton: false,
+                    timer: 1500,
+                    type: "success",
+                    showCancelButton: false,
+                    closeOnConfirm: true
+                })
+            }
+        });
+    });
+</script>

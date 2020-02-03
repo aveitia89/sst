@@ -1,0 +1,350 @@
+{% extends 'base.html.twig' %}
+{% block stylesheets %}
+    <link href="{{ asset('etecsa/exportarTabla/css/buttons.dataTables.min.css') }}" rel="stylesheet" type="text/css" />
+{% endblock %}
+{% block contenido %}
+    <div class="box">
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <h1 style="text-align: center">Accidente Laboral</h1>
+                    </div>
+                </div>
+                {#Codigo de Botones#}
+                {% if is_granted('ROLE_TECNICO') %}
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="panel-body col-lg-2">
+                            <a href="#nuevo" data-toggle="modal" class="btn btn-facebook" data-placement="top" title="Registrar nuevo accidente">Registrar accidente</a>
+                            <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="nuevo" class="modal fade">
+                                <div class="modal-dialog" style="width: 1000px; height: auto">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button aria-hidden="true" data-dismiss="modal" class="close" type="button">×
+                                            </button>
+                                            <h4 class="modal-title" style="text-align: center">Registrar accidente</h4>
+                                        </div>
+                                        <div class="modal-body">
+                                            <form role="form" method="post" action="{{ path('registrarAccidente') }}" class="form-group" enctype="multipart/form-data">
+                                                <div class="row">
+                                                    <div class="row">
+                                                        <div class="col-lg-12">
+                                                            <div class="form-group col-lg-3" style="text-align: center">
+                                                                <label>Trabajador</label>
+                                                                <select class="form-control" name="trabajador" id="trabajador" required="required">
+                                                                    <option value="">Seleccionar</option>
+                                                                    {% for trab in trabajador %}
+                                                                        <option style="text-align: center" value="{{ trab.id }}">{{ trab.nombre }} {{ trab.apellidos }} {{ trab.segundoApellido }}</option>
+                                                                    {% endfor %}
+                                                                </select>
+                                                            </div>
+                                                            <div class="form-group col-lg-3" style="text-align: center">
+                                                                <label>Tipo de Accidente</label>
+                                                                <select class="form-control" name="tipo" id="tipo" required="required">
+                                                                    <option value="">Seleccionar</option>
+                                                                    {% for tip in tipo %}
+                                                                        <option style="text-align: center" value="{{ tip.id }}">{{ tip.tipo }}</option>
+                                                                    {% endfor %}
+                                                                </select>
+                                                            </div>
+                                                            <div class="form-group col-lg-3" style="text-align: center">
+                                                                <label>Forma de accidente</label>
+                                                                <select class="form-control" name="formas" id="formas" required="required">
+                                                                    <option value="">Seleccionar</option>
+                                                                    {% for form in forma %}
+                                                                        <option style="text-align: center" value="{{ form.id }}">{{ form.formas }}</option>
+                                                                    {% endfor %}
+                                                                </select>
+                                                            </div>
+                                                            <div class="form-group col-lg-3" style="text-align: center">
+                                                                <label>Lugar de ocurrencia</label>
+                                                                <select class="form-control" name="lugar" id="lugar" required="required">
+                                                                    <option value="">Seleccionar</option>
+                                                                    {% for lug in lugar %}
+                                                                        <option style="text-align: center" value="{{ lug.id }}">{{ lug.lugar }}</option>
+                                                                    {% endfor %}
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-lg-12">
+                                                            <div class="form-group col-lg-3" id="sandbox-container" style="text-align: center">
+                                                                <label>Fecha Inicio</label>
+                                                                <input style="text-align: center" name="fechaInicio" type="text" id="fechaInicio"
+                                                                       class="form-control round-input" required="required">
+                                                            </div>
+                                                            <div class="form-group col-lg-3" id="sandbox-container" style="text-align: center">
+                                                                <label>Fecha Fin</label>
+                                                                <input style="text-align: center" name="fechaFin" type="text" id="fechaFin"
+                                                                       class="form-control round-input" required="required">
+                                                            </div>
+                                                            <div class="form-group col-lg-3" style="text-align: center">
+                                                                <label>Horario del trabajo</label>
+                                                                <select class="form-control" name="horario" id="horario" required="required">
+                                                                    <option value="">Seleccionar</option>
+                                                                    <option value="8:00am a 5:50pm">8:00am a 5:50pm</option>
+                                                                    <option value="8:00am a 7:30pm">8:00am a 7:30pm</option>
+                                                                    <option value="8:00am a 8:00pm">8:00am a 8:00pm</option>
+                                                                    <option value="8:00pm a 8:00am">8:00pm a 8:00am</option>
+                                                                    <option value="24 horas">24 horas</option>
+                                                                </select>
+                                                            </div>
+                                                            <div class="form-group col-lg-3" style="text-align: center">
+                                                                <label>Turnos del trabajo</label>
+                                                                <select class="form-control" name="turno" id="turno">
+                                                                    <option value="">Seleccionar</option>                                                                {
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-lg-12">
+                                                            <div class="form-group col-lg-3" style="text-align: center">
+                                                                <label>Causas</label>
+                                                                <select class="form-control" name="causas" id="causas" required="required">
+                                                                    <option value="">Seleccionar</option>
+                                                                    {% for causa in causas %}
+                                                                        <option style="text-align: center" value="{{ causa.id }}">{{ causa.nombre }}</option>
+                                                                    {% endfor %}
+                                                                </select>
+                                                            </div>
+                                                            <div class="form-group col-lg-3" style="text-align: center">
+                                                                <label>Especif. de las causas</label>
+                                                                <select class="form-control" name="especificacionesCausas" id="especificacionesCausas">
+                                                                    <option value="">Seleccionar</option>                                                                {
+                                                                </select>
+                                                            </div>
+                                                            <div class="form-group col-lg-3" style="text-align: center">
+                                                                <label>Agente Material</label>
+                                                                <select class="form-control" name="agente" id="agente" required="required">
+                                                                    <option value="">Seleccionar</option>
+                                                                    {% for agente in agentematerial %}
+                                                                        <option style="text-align: center" value="{{ agente.id }}">{{ agente.nombre }}</option>
+                                                                    {% endfor %}
+                                                                </select>
+                                                            </div>
+                                                            <div class="form-group col-lg-3" style="text-align: center">
+                                                                <label>Especif. Agente Material</label>
+                                                                <select class="form-control" name="especificacionesAgente" id="especificacionesAgente">
+                                                                    <option value="">Seleccionar</option>                                                                {
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-lg-12">
+                                                            <div class="form-group col-lg-3" style="text-align: center">
+                                                                <label>Partes lesionadas</label>
+                                                                <select multiple class="form-control" name="partes" id="partes" required="required">
+                                                                    {% for parte in parteLesion %}
+                                                                        <option value="{{ parte.id }}">{{ parte.nombre }}</option>
+                                                                    {% endfor %}
+                                                                </select>
+                                                            </div>
+                                                            <div class="form-group col-lg-3" style="text-align: center">
+                                                                <label>Naturaleza de la lesión</label>
+                                                                <select class="form-control" name="lesion" id="lesion" required="required">
+                                                                    <option value="">Seleccionar</option>
+                                                                    {% for naturalezalesion in lesion %}
+                                                                        <option style="text-align: center" value="{{ naturalezalesion.id }}">{{ naturalezalesion.nombre }}</option>
+                                                                    {% endfor %}
+                                                                </select>
+                                                            </div>
+                                                            <div class="form-group col-lg-3" style="text-align: center">
+                                                                <label>Costo directos</label>
+                                                                <input style="text-align: center" name="directos" type="text" id="directos" class="form-control round-input validar" required="required">
+                                                            </div>
+                                                            <div class="form-group col-lg-3" style="text-align: center">
+                                                                <label>Costo indirectos</label>
+                                                                <input style="text-align: center" name="indirectos" type="text" id="indirectos" class="form-control round-input validar" required="required">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-lg-12">
+                                                            <div class="form-group col-lg-6" style="text-align: center">
+                                                                <label>Descripción del accidente</label>
+                                                                <textarea style="text-align: center" name="descripcion" rows="4" type="" id="descripcion" class="form-control round-input" required="required"></textarea>
+                                                            </div>
+                                                            <div class="form-group col-lg-6" style="text-align: center">
+                                                                <label>Observaciones</label>
+                                                                <textarea style="text-align: center" name="observaciones" rows="4" type="text" id="observaciones" class="form-control round-input" required="required"></textarea>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <button type="submit" class="btn btn-facebook insertar">Insertar</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel-body col-lg-1">
+                            <a href="#nuevoUser4" class="btn btn-facebook resumen" data-toggle="modal" data-placement="top" title="Resumen de accidentes laborales por unidades organizativas">Resumen accidente</a>
+                            <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="nuevoUser4" class="modal fade">
+                                <div class="modal-dialog" style="width: 350px; height: auto">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button aria-hidden="true" data-dismiss="modal" class="close" type="button">×
+                                            </button>
+                                            <h4 class="modal-title" style="text-align: center">Accidentes laborales por Entidad</h4>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="row">
+                                                <div class="row">
+                                                    <div class="col-lg-12">
+                                                        <div class="form-group col-lg-12" >
+                                                            <label>Entidad</label>
+                                                            <select class="form-control" name="uoAccidentes" id="uoAccidentes"
+                                                                    required="required">
+                                                                <option value=""></option>
+                                                                {% for uo in unidadOrganizativa %}
+                                                                    <option style="text-align: center" value="{{ uo.id }}">{{ uo.nombre }}</option>
+                                                                {% endfor %}
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <button type="submit" class="btn btn-facebook accidentesDT">Insertar</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+                {#Fin codigo de botones#}
+                {#actualizar#}
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <!-- Example DataTables Card-->
+                                <div class="box-body listar">
+                                    <img class="loading3" src="{{ asset('etecsa/img/loadingBig.gif') }}" style="width: 100px;height: 100px; margin-left: 40%; margin-top: 10%; text-align: center">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {# Fin actualizar#}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block javascripts %}
+    <script src="{{ asset('etecsa/exportarTabla/js/dataTables.buttons.min.js') }}"></script>
+    <script src="{{ asset('etecsa/exportarTabla/js/buttons.flash.min.js') }}"></script>
+    <script src="{{ asset('etecsa/exportarTabla/js/jszip.min.js') }}"></script>
+    <script src="{{ asset('etecsa/exportarTabla/js/pdfmake.min.js') }}"></script>
+    <script src="{{ asset('etecsa/exportarTabla/js/vfs_fonts.js') }}"></script>              
+    <script src="{{ asset('etecsa/exportarTabla/js/buttons.html5.min.js') }}"></script>
+    <script src="{{ asset('etecsa/exportarTabla/js/buttons.print.min.js') }}"></script>
+    
+    <script>
+        $.post("{{ path('accidentelaboralAjax')}}", function (data) {
+            $('.listar').html(data);
+        });
+    </script>
+    <script>
+        $(function(){
+            $(".validar").keydown(function(event){
+                //alert(event.keyCode);
+                if((event.keyCode < 48 || event.keyCode > 57) && (event.keyCode < 96 || event.keyCode > 105) && event.keyCode !==190  && event.keyCode !==110 && event.keyCode !==8 && event.keyCode !==9  ){
+                    return false;
+                }
+            });
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+            $("#causas").change(function (event) {
+                $("#especificacionesCausas").find('option').remove();
+                var id = document.getElementById("causas").value;
+                var path ='{{ path("especificacioneCausas", {'id': 'xx',}) }}';
+                path = path.replace("xx", id);
+                $.ajax({
+                    type:"GET",
+                    url: path,
+                    dataType: 'json',
+                    data: {id:id},
+                    success: function (response) {
+                        $.each(response,function(key, registro) {
+                            $("#especificacionesCausas").append('<option value='+registro.id+'>'+registro.nombre+'</option>');
+                        });
+                    }
+                });
+            });
+        });
+        $(document).ready(function () {
+            $("#agente").change(function (event) {
+                $("#especificacionesAgente").find('option').remove();
+                var id = document.getElementById("agente").value;
+                var path ='{{ path("especificacioneAgente", {'id': 'xx',}) }}';
+                path = path.replace("xx", id);
+                $.ajax({
+                    type:"GET",
+                    url: path,
+                    dataType: 'json',
+                    data: {id:id},
+                    success: function (response) {
+                        $.each(response,function(key, registro) {
+                            $("#especificacionesAgente").append('<option value='+registro.id+'>'+registro.nombre+'</option>');
+                        });
+                    }
+                });
+            });
+        });
+        $(document).ready(function () {
+            $("#horario").change(function (event) {
+                $("#turno").find('option').remove();
+                var horario = document.getElementById("horario").value;
+                if (horario == ""){
+                    $("#turno").append('<option value="">Seleccionar</option>');
+                }else if (horario == "8:00am a 5:50pm" || horario == "8:00am a 7:30pm"){
+                    $("#turno").append('<option value="1er Tuno">1er Tuno</option>');
+                }else if(horario == "8:00am a 8:00pm" || horario == "8:00pm a 8:00am"){
+                    $("#turno").append('<option value="2do Tuno">2do Tuno</option>');
+                }else{
+                    $("#turno").append('<option value="3er Tuno">3er Tuno</option>');
+                }
+            });
+        });
+    </script>
+    <script>
+        $('.accidentesDT').click(function (event) {
+            var area = document.getElementById("uoAccidentes").value;
+
+            var path ='{{ path("resumen", {'uo': 'xx'}) }}';
+            path = path.replace("xx", area);
+
+            $.ajax({
+                url : path,
+                data : {},
+                type : 'POST',
+                dataType : '',
+                success : function(data) {
+                    $("#nuevoUser4").modal('hide');
+                    $('.listar').html(data);
+                },
+                error : function(xhr, status) {
+                    swal({
+                        position: 'top-end',
+                        icon: 'error',
+                        title: 'Error.',
+                        showConfirmButton: false,
+                        timer: 1500,
+                        type: "error",
+                        showCancelButton: false,
+                        closeOnConfirm: true
+                    })
+                },
+            });
+        })
+    </script>
+{% endblock %}

@@ -1,0 +1,52 @@
+/** {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}*/
+
+/*body {
+    font-family: 'Open Sans', sans-serif;
+    padding: 50px;
+}
+
+div {
+    position: absolute;
+    text-transform: uppercase;
+    font-size: 21px;
+    left: 50%;
+}*/
+
+/*div:nth-child(1) {
+    margin-left: -100px;
+}
+
+div:nth-child(2) {
+    margin-left: -25px;
+}
+
+div:nth-child(3) {
+    margin-left: 50px;
+}*/
+
+.texto-vertical-1 {
+    writing-mode: vertical-lr;
+    text-align: center;
+    height: 50px;
+}
+.texto-vertical-2 {
+    writing-mode: vertical-lr;
+    text-align: center;
+    height: 95px;
+}
+
+.texto-vertical-3 {
+    writing-mode: vertical-lr;
+    transform: rotate(180deg);
+}
+
+.texto-vertical-4 {
+    width: 20px;
+    word-wrap: break-word;
+    text-align: center;
+    line-height: 20px;
+}

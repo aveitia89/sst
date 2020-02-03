@@ -1,0 +1,196 @@
+{% extends 'base.html.twig' %}
+{% block contenido %}
+    <div class="box">
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <h1 style="text-align: center">Gestión de USUARIOS</h1>
+                    </div>
+                </div>
+                {#Codigo de Botones#}
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="panel-body col-lg-12">
+                            <a href="#nuevoUser" data-toggle="modal" class="btn btn-facebook" data-placement="top" title="Insertar nuevo usuario">Insertar Usuario</a>
+                            <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="nuevoUser" class="modal fade">
+                                <div class="modal-dialog" style="width: 500px; height: auto">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button aria-hidden="true" data-dismiss="modal" class="close" type="button">×
+                                            </button>
+                                            <h4 class="modal-title" style="text-align: center">Insertar Usuario</h4>
+                                        </div>
+                                        <div class="modal-body">
+                                            {#<form role="form" action="{{ path('crearUser') }}" method="post" enctype="multipart/form-data"></form>#}
+                                            <div class="row">
+                                                <div class="row">
+                                                    <div class="col-lg-12">
+                                                        <div class="form-group col-lg-6" style="text-align: center">
+                                                            <label>Nombre y Apellido</label>
+                                                            <input style="text-align: center" name="nombre" type="text"
+                                                                   id="nombre" maxlength="60" class="form-control round-input"
+                                                                   required="required">
+                                                        </div>
+                                                        <div class="form-group col-lg-6" style="text-align: center">
+                                                            <label>Usuario</label>
+                                                            <input style="text-align: center" name="usuario" type="text"
+                                                                   id="usuario" class="form-control round-input"
+                                                                   required="required">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-lg-12">
+                                                        <div class="form-group col-lg-6" style="text-align: center">
+                                                            <label>Correo</label>
+                                                            <input style="text-align: center" name="email" type="email"
+                                                                   id="email" class="form-control round-input"
+                                                                   required="required">
+                                                        </div>
+                                                        <div class="form-group col-lg-6" style="text-align: center">
+                                                            <label>Contraseña</label>
+                                                            <input style="text-align: center" name="pass" type="password"
+                                                                   id="pass" class="form-control round-input"
+                                                                   required="required">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-lg-12">
+                                                        <div class="form-group col-lg-6" style="text-align: center">
+                                                            <label>Perfil</label>
+                                                            <select class="form-control" name="rol" id="rol"
+                                                                    required="required">
+                                                                <option value=""></option>
+                                                                <option value="Administrador">Administrador</option>
+                                                                <option value="Especialista">Especialista</option>
+                                                                <option value="Jefe Operaciones">Jefe Operaciones</option>
+                                                                <option value="Jefe Brigada">Jefe Brigada</option>
+                                                                <option value="Técnico">Técnico</option>
+                                                                <option value="Usuario">Usuario</option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="form-group col-lg-6" style="text-align: center">
+                                                            <label>Centro</label>
+                                                            <select class="form-control" name="centro" id="centro"
+                                                                    required="required">
+                                                                <option value=""></option>
+                                                                {% for cent in centro %}
+                                                                    <option value="{{ cent.id }}">{{ cent.nombre }}</option>
+                                                                {% endfor %}
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <button type="submit" class="btn btn-facebook insertar">Insertar</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {#Fin codigo de botones#}
+                {#actualizar#}
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <!-- Example DataTables Card-->
+                                <div class="box-body listarUser">
+                                    <img class="loading3" src="{{ asset('etecsa/img/loadingBig.gif') }}" style="width: 100px;height: 100px; margin-left: 40%; margin-top: 10%; text-align: center">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {# Fin actualizar#}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block javascripts %}
+    <script>
+        $.post("{{ path('usuarioAjax')}}", function (data) {
+            $('.listarUser').html(data);
+        });
+    </script>
+    <script>
+        $('#nombre').onblur(function (event) {
+         alert( document.getElementById("nombre").value);
+        })
+
+        $(".insertar").click(function(event){
+            var nombre = document.getElementById("nombre").value;
+            var usuario = document.getElementById("usuario").value;
+            var correo = document.getElementById("email").value;
+            var pass = document.getElementById("pass").value;
+            var rol = document.getElementById("rol").value;
+            var area = document.getElementById("centro").value;
+
+
+
+            var path ='{{ path("crearUser", {'nombre': 'xx','usuario': 'xx','correo': 'xx','pass': 'xx','rol': 'xx','area': 'xx'}) }}';
+            path = path.replace("xx", nombre);
+            path = path.replace("xx", usuario);
+            path = path.replace("xx", correo);
+            path = path.replace("xx", pass);
+            path = path.replace("xx", rol);
+            path = path.replace("xx", area);
+
+            $.ajax({
+                url : path,
+                data : {},
+                type : 'POST',
+                dataType : '',
+                success : function(data) {
+                    $('.listarUser').html(data);
+                },
+                error : function(xhr, status) {
+                    alert(xhr.message);
+                },
+                complete : function(xhr, status) {
+                   swal({
+                       position: 'top-end',
+                       icon: 'success',
+                       title: 'Se ha insertado correctamente.',
+                       showConfirmButton: false,
+                       timer: 1500,
+                       type: "success",
+                       showCancelButton: false,
+                       closeOnConfirm: true
+                       })
+                    $("#nuevoUser").modal('hide');
+                }
+            });
+
+        });
+    </script>
+    <script>
+        $(function(){
+            $("#nombre").keydown(function(event){
+                //alert(event.keyCode);
+                if((event.keyCode < 48 || event.keyCode > 57) &&
+                    (event.keyCode < 96 || event.keyCode > 105) &&
+                    event.keyCode !==190  && event.keyCode !==110 && event.keyCode !==9){
+                    return true
+                }
+                else
+                {
+                    swal({
+                        position: 'top-end',
+                        icon: 'error',
+                        title: 'Error, los nombre solo deben tener letras.',
+                        showConfirmButton: false,
+                        timer: 1500,
+                        type: "error",
+                        showCancelButton: false,
+                        closeOnConfirm: true
+                    })
+                }
+            });
+        });
+    </script>
+{% endblock %}

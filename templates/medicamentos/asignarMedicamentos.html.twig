@@ -1,0 +1,152 @@
+{% extends 'base.html.twig' %}
+{% block stylesheets %}
+    <link href="{{ asset('etecsa/exportarTabla/css/buttons.dataTables.min.css') }}" rel="stylesheet" type="text/css" />
+{% endblock %}
+{% block contenido %}
+    <div class="box">
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <h1 style="text-align: center">Asignar Medicamentos</h1>
+                    </div>
+                </div>
+                {#Codigo de Botones#}
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="panel-body col-lg-12">
+                            <a href="#nuevoMed" data-toggle="modal" class="btn btn-facebook" data-placement="top" title="Insertar nuevo usuario">Insertar</a>
+                            <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="nuevoMed" class="modal fade">
+                                <div class="modal-dialog" style="width: 500px; height: auto">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button aria-hidden="true" data-dismiss="modal" class="close" type="button">×
+                                            </button>
+                                            <h4 class="modal-title" style="text-align: center">Asignar medicamento al trabjador</h4>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="row">
+                                                <div class="row">
+                                                    <div class="col-lg-12">
+                                                        <div class="form-group col-lg-6" style="text-align: center">
+                                                            <label>Trabajador</label>
+                                                            <select class="form-control" name="trabajador" id="trabajador" required="required">
+                                                                <option value="">Seleccionar</option>
+                                                                {% for trab in trabajadores %}
+                                                                    <option style="text-align: center" value="{{ trab.id }}">{{ trab.nombre }} {{ trab.apellidos }} {{ trab.segundoApellido }}</option>
+                                                                {% endfor %}
+                                                            </select>
+                                                        </div>
+                                                        <div class="form-group col-lg-6" style="text-align: center">
+                                                            <label>Medicamento</label>
+                                                            <select class="form-control" name="medicamento" id="medicamento" required="required">
+                                                                <option value="">Seleccionar</option>
+                                                                {% for med in medicamentos %}
+                                                                    <option style="text-align: center" value="{{ med.id }}">{{ med.nombre }}</option>
+                                                                {% endfor %}
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-lg-12">
+                                                        <div class="form-group col-lg-6" id="sandbox-container" style="text-align: center">
+                                                            <label>Fecha</label>
+                                                            <input style="text-align: center" name="fecha" type="text" id="fecha"
+                                                                   class="form-control round-input" required="required">
+                                                        </div>
+                                                        <div class="form-group col-lg-6" style="text-align: center">
+                                                            <label>Cantidad</label>
+                                                            <input style="text-align: center" name="cantidad" type="text" id="cantidad"
+                                                                   class="form-control round-input" required="required">
+                                                        </div>
+{#                                                        <div class="form-group col-lg-12" style="text-align: center">#}
+{#                                                            <label>Orden</label>#}
+{#                                                            <textarea style="text-align: center" name="orden" rows="5" type="text" id="orden" class="form-control round-input" required="required"></textarea>#}
+{#                                                        </di>v#}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <button type="submit" class="btn btn-facebook insertar">Insertar</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {#Fin codigo de botones#}
+                {#actualizar#}
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <!-- Example DataTables Card-->
+                                <div class="box-body listar">
+                                    <img class="loading3" src="{{ asset('etecsa/img/loadingBig.gif') }}" style="width: 100px;height: 100px; margin-left: 40%; margin-top: 10%; text-align: center">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {# Fin actualizar#}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block javascripts %}
+    <script src="{{ asset('etecsa/exportarTabla/js/dataTables.buttons.min.js') }}"></script>
+    <script src="{{ asset('etecsa/exportarTabla/js/buttons.flash.min.js') }}"></script>
+    <script src="{{ asset('etecsa/exportarTabla/js/jszip.min.js') }}"></script>
+    <script src="{{ asset('etecsa/exportarTabla/js/pdfmake.min.js') }}"></script>
+    <script src="{{ asset('etecsa/exportarTabla/js/vfs_fonts.js') }}"></script>              
+    <script src="{{ asset('etecsa/exportarTabla/js/buttons.html5.min.js') }}"></script>
+    <script src="{{ asset('etecsa/exportarTabla/js/buttons.print.min.js') }}"></script>
+    <script>
+        $.post("{{ path('asignarmedicamentoAjax')}}", function (data) {
+            $('.listar').html(data);
+        });
+    </script>
+    <script>
+        $(".insertar").click(function(event){
+            var idtrabajador = document.getElementById("trabajador").value;
+            var idmedicamento = document.getElementById("medicamento").value;
+            var fecha = document.getElementById("fecha").value;
+            var cantidad = document.getElementById("cantidad").value;
+            // var orden = document.getElementById("orden").value;
+
+            var path ='{{ path("asignarMT", {'idtrabajador': 'xx','idmedicamento': 'xx','fecha': 'xx','cantidad': 'xx','orden': 'xx'}) }}';
+            path = path.replace("xx", idtrabajador);
+            path = path.replace("xx", idmedicamento);
+            path = path.replace("xx", fecha);
+            path = path.replace("xx", cantidad);
+            // path = path.replace("xx", orden);
+
+            $.ajax({
+                url : path,
+                data : {},
+                type : 'POST',
+                dataType : '',
+                success : function(data) {
+                    $('.listar').html(data);
+                    $("#nuevoMed").modal('hide');
+                },
+                error : function(data) {
+                    alert("Error");
+                },
+                complete : function(data) {
+                    swal({
+                        position: 'top-end',
+                        icon: 'success',
+                        title: 'Se ha insertado correctamente',
+                        showConfirmButton: false,
+                        timer: 1500,
+                        type: "success",
+                        showCancelButton: false,
+                        closeOnConfirm: true
+                    })
+                }
+            });
+        });
+    </script>
+{% endblock %}

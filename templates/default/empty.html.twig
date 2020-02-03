@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %}
+
+{% block contenido %}
+    <div class="color-line"></div>
+    {#<div class="pull-left m">
+        <a href="index" class="btn btn-primary">Regresar</a>
+    </div>#}
+    <br>
+    <div class="error-container text-center">
+        <i class="  text-success fa mdi mdi-alert-octagram fa-5x"></i>
+        <h1>404</h1>
+        <strong>Búsqueda sin resultados</strong>
+        <p>
+            Disculpe, no se encontró información que coincida con sus términos de búsquedas.
+        </p>
+        <a href="#" id="back" class="btn btn-xs btn-success">Regresar</a>
+    </div>
+{% endblock %}
+
+{% block stylesheets %}
+<script>
+    window.onload = function () {
+        $("#back").click(function () {
+             window.history.back();
+        });
+    }
+</script>
+{% endblock %}

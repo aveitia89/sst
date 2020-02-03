@@ -1,0 +1,187 @@
+{% extends 'base.html.twig' %}
+{% block stylesheets %}
+    <link href="{{ asset('etecsa/exportarTabla/css/buttons.dataTables.min.css') }}" rel="stylesheet" type="text/css" />
+{% endblock %}
+{% block contenido %}
+<div class="box">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 style="text-align: center">Gestión de Medios de Protección</h1>
+                </div>
+            </div>
+            <br/>
+            <div class="row">
+                <div class="col-lg-12">
+                    {% if is_granted('ROLE_TECNICO') %}
+                    <div class="panel-body col-lg-1">
+                        <a href="#nuevoUser" data-toggle="modal" class="btn btn-facebook" data-placement="top" title="Insertar medio de proteccion">Insertar</a>
+                        <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="nuevoUser" class="modal fade">
+                            <div class="modal-dialog" style="width: 500px; height: auto">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button aria-hidden="true" data-dismiss="modal" class="close" type="button">×
+                                        </button>
+                                        <h4 class="modal-title" style="text-align: center">Insertar Medios de Protección</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="row">
+                                            <div class="row">
+                                                <div class="col-lg-12">
+                                                    <div class="form-group col-lg-6" style="text-align: center">
+                                                        <label>Descripción</label>
+                                                        <input style="text-align: center" name="descripcion" type="text"
+                                                               id="descripcion" class="form-control round-input"
+                                                               required="required">
+                                                    </div>
+                                                    <div class="form-group col-lg-6" style="text-align: center">
+                                                        <label>Vida útil (días)</label>
+                                                        <input style="text-align: center" name="vidautil" type="text"
+                                                                onkeypress='return event.charCode >= 48 && event.charCode <= 57'
+                                                               id="vidautil" class="form-control round-input"
+                                                               required="required">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-lg-12">
+                                                    <div class="form-group col-lg-6" style="text-align: center">
+                                                        <label>Unidad de Medida</label>
+                                                        <select class="form-control" name="um" id="um"
+                                                                required="required">
+                                                            <option value="disable">Seleccione una opción</option>
+                                                            <option value="uno">UNO</option>
+                                                            <option value="paa">PAA</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="form-group col-lg-6" style="text-align: center">
+                                                        <label>Costo</label>
+                                                        <input style="text-align: center" name="costo" id="costo" type="text"
+                                                               onkeypress='return event.charCode >= 48 && event.charCode <= 57'
+                                                               class="form-control round-input"
+                                                               required="required">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-lg-12">
+                                                    <div class="form-group col-lg-6" style="text-align: center">
+                                                        <label>Código SAP</label>
+                                                        <input style="text-align: center" name="codigo" type="text"
+                                                               id="codigo" class="form-control round-input"
+                                                               required="required">
+                                                    </div>
+                                                    <div class="form-group col-lg-6" style="text-align: center">
+                                                        <label>Tipo de talla</label>
+                                                        <select class="form-control" name="talla" id="talla"
+                                                                required="required">
+                                                            <option value="disable">Seleccione una opción</option>
+                                                            {% for tallas in talla %}
+                                                                <option value="{{ tallas.id }}">{{tallas.nombre}}</option>
+                                                            {% endfor %}
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-lg-12">
+                                                    <div class="form-group col-lg-6" style="text-align: center">
+                                                        <label>Cantidad</label>
+                                                        <input style="text-align: center" name="cantidad" type="text"
+                                                               onkeypress='return event.charCode >= 48 && event.charCode <= 57'
+                                                               id="cantidad" class="form-control round-input"
+                                                               required="required">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <button type="submit" class="btn btn-facebook insertar">Insertar</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel-body col-lg-1">
+                        <a href="{{ path('mediodeproteccion_asignar') }}" data-toggle="modal" class="btn btn-facebook" data-placement="top" title="Asignar medios de proteccion">Asignar</a>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <!-- Example DataTables Card-->
+                            <div class="box-body listar">
+                                <img class="loading3" src="{{ asset('etecsa/img/loadingBig.gif') }}" style="width: 100px;height: 100px; margin-left: 40%; margin-top: 10%; text-align: center">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+         </div>
+     </div>
+</div>
+{% endblock %}
+{% block javascripts %}
+    <script src="{{ asset('etecsa/exportarTabla/js/dataTables.buttons.min.js') }}"></script>
+    <script src="{{ asset('etecsa/exportarTabla/js/buttons.flash.min.js') }}"></script>
+    <script src="{{ asset('etecsa/exportarTabla/js/jszip.min.js') }}"></script>
+    <script src="{{ asset('etecsa/exportarTabla/js/pdfmake.min.js') }}"></script>
+    <script src="{{ asset('etecsa/exportarTabla/js/vfs_fonts.js') }}"></script>              
+    <script src="{{ asset('etecsa/exportarTabla/js/buttons.html5.min.js') }}"></script>
+    <script src="{{ asset('etecsa/exportarTabla/js/buttons.print.min.js') }}"></script>
+    <script>
+        $.post("{{ path('mpAjax')}}", function (data) {
+             $('.listar').html(data);
+        });
+    </script>
+    <script>
+        $(".insertar").click(function(event){
+            var descripcion = document.getElementById("descripcion").value;
+            var vidautil = document.getElementById("vidautil").value;
+            var um = document.getElementById("um").value;
+            var codigo = document.getElementById("codigo").value;
+            var talla = document.getElementById("talla").value;
+            var cantidad = document.getElementById("cantidad").value;
+            var costo = document.getElementById("costo").value;
+
+            var path ='{{ path("mediodeproteccion_new", {'descripcion': 'xx','vidautil': 'xx','um': 'xx','codigo': 'xx','idtalla': 'xx','cantidad': 'xx','costo': 'xx'}) }}';
+            path = path.replace("xx", descripcion);
+            path = path.replace("xx", vidautil);
+            path = path.replace("xx", um);
+            path = path.replace("xx", codigo);
+            path = path.replace("xx", talla);
+            path = path.replace("xx", cantidad);
+            path = path.replace("xx", costo);
+
+            $.ajax({
+                url : path,
+                data : {},
+                type : 'POST',
+                dataType : '',
+                success : function(data) {
+                    $('.listar').html(data);
+                },
+                error : function(xhr, status) {
+                    alert(xhr.message);
+                },
+                complete : function(xhr, status) {
+                   swal({
+                       position: 'top-end',
+                       icon: 'success',
+                       title: 'Se ha insertado correctamente.',
+                       showConfirmButton: false,
+                       timer: 1500,
+                       type: "success",
+                       showCancelButton: false,
+                       closeOnConfirm: true
+                       })
+                    $("#nuevoUser").modal('hide');
+                }
+            });
+
+        });
+    </script>
+{% endblock %}

@@ -1,0 +1,137 @@
+{% extends 'base.html.twig' %}
+
+{% block contenido %}
+    <div class="box">
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <h1 style="text-align: center">Reportes Supervisión</h1>
+                    </div>
+                </div>
+                <br/>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="panel-body col-lg-5">
+                            <a href="{{ path('listadoDT') }}" data-toggle="modal" class="btn btn-facebook listado" data-placement="top" title="Listado de riesgos y medidas identificadas por Unidad Organizativa.">Listado de riesgos y Medidas por Unidada Organizativa</a>
+                        </div>
+                        <div class="panel-body col-lg-2">
+                            <a href="{{path('tipoExterna')}}" data-toggle="modal" class="btn btn-facebook" data-placement="top" title="Informe de inspecciones externas de seguridad y salud del trabajo">Inspecciones</a>
+                        </div>
+                        <div class="panel-body col-lg-2">
+                            <a href="{{ path('peligrosidadDT') }}" data-toggle="modal" class="btn btn-facebook listado" data-placement="top" title="Unidades organizativas con más peligrosidad según riesgos laborales.">Peligrosidad</a>
+                        </div>
+                        <div class="panel-body col-lg-2">
+                            <a href="#nuevo" data-toggle="modal" class="btn btn-facebook listado" data-placement="top" title="Informe de las supervisiones de seguridad y salud por rango de fecha según la Unidad Organizativa.">Rango Fecha</a>
+                            <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="nuevo" class="modal fade">
+                                <div class="modal-dialog" style="width: 650px; height: auto">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button aria-hidden="true" data-dismiss="modal" class="close" type="button">×
+                                            </button>
+                                            <h4 class="modal-title" style="text-align: center">Informe de las supervisiones de seguridad y salud</h4>
+                                        </div>
+                                        <div class="modal-body">
+                                            <form role="form" method="post" action="{{ path('rangoFechaSupervision') }}" enctype="multipart/form-data">
+                                                <div class="row">
+                                                    <div class="row">
+                                                        <div class="col-lg-12">
+                                                            <div class="form-group col-lg-6" style="text-align: center">
+                                                                <label>Unidad Organizativa</label>
+                                                                <select class="form-control" name="idTD" id="idTD"
+                                                                        required="required">
+                                                                    <option value="">Seleccionar</option>
+                                                                    {% for DT in area %}
+                                                                        <option style="text-align: center" value="{{ DT.id }}">{{ DT.nombre }}</option>
+                                                                    {% endfor %}
+                                                                </select>
+                                                            </div>
+                                                            <div class="form-group col-lg-6">
+                                                                <label>Rango de Fecha:</label>
+                                                                <div class="input-group">
+                                                                    <div class="input-group-addon">
+                                                                        <i class="fa fa-calendar"></i>
+                                                                    </div>
+                                                                    <input name="rangoFecha" id="rangoFecha" type="text" class="form-control pull-right rango">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <button type="submit" class="btn btn-facebook">Enviar</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <!-- Example DataTables Card-->
+                                <div class="box-body listar"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block javascripts %}
+    <script>
+        {{ parent() }}
+        $(document).ready(function() {
+            fechitas();
+            function fechitas() {
+                $('.rango').daterangepicker({
+                    "autoApply": true,
+                    autoclose: true,
+                    language: "es",
+                    "locale": {
+                        "format": "DD.MM.YYYY",
+                        "separator": "-",
+                        "applyLabel": "Apply",
+                        "cancelLabel": "Cancel",
+                        "fromLabel": "From",
+                        "toLabel": "To",
+                        "customRangeLabel": "Custom",
+                        "weekLabel": "W",
+                        "daysOfWeek": [
+                            "Do",
+                            "Lu",
+                            "Ma",
+                            "Mi",
+                            "Ju",
+                            "Vi",
+                            "Sa"
+                        ],
+                        "monthNames": [
+                            "Enero",
+                            "Febrero",
+                            "Marzo",
+                            "Abril",
+                            "Mayo",
+                            "Junio",
+                            "Julio",
+                            "Agosto",
+                            "Septiembre",
+                            "Octubre",
+                            "Noviembre",
+                            "Diciembre"
+                        ],
+                        "firstDay": 0
+                    },
+
+                    "startDate": "{{  "now" | date("d/m/Y") }}",
+                    "endDate": "{{ "now" | date("d/m/Y") }}",
+                    "opens": "center",
+                    "drops": "down"
+                },)
+            };
+        });
+    </script>
+{% endblock %}

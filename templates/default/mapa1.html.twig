@@ -1,0 +1,113 @@
+{% extends 'base.html.twig' %}
+
+{% block contenido %}
+    <div class="col-lg-12">
+        <h1 style="text-align: center">Mapa Territorio Sur</h1>
+    </div>
+    <a href="" class="navbar-brand" data-placement="top" title="Registrar nuevo accidente"">
+    <span style="position: absolute; top: 120px; left: 160px">
+    <div class="row">
+        <img class="loading3" src="{{ asset ('etecsa/imagenes/sobra.png') }}" alt="Ejemplo" style="">
+    </div></span>
+    </a>
+
+    <span style="position: absolute; top: 27px; left: 160px;">
+    <div class="row">
+        <img src="{{ asset ('etecsa/imagenes/cotorro.png') }}" alt="ejemplo" style="..." border="50">
+    </div></span>
+    <span style="position: absolute; top: 27px; left: -60px">
+    <div class="row">
+        <img class="loading3" src="{{ asset ('etecsa/imagenes/cerro.png') }}" style="...">
+    </div></span>
+    <span style="position: absolute; top: 27px; left: -60px">
+    <div class="row">
+        <img class="loading3" src="{{ asset ('etecsa/imagenes/1010.png') }}" style="...">
+    </div></span>
+    <span style="position: absolute;top: 27px; left: -60px">
+    <div class="row">
+        <img class="loading3" src="{{ asset ('etecsa/imagenes/arroyo.png') }}" style="...">
+    </div></span>
+    <span style="position: absolute; top: 27px; left: -60px">
+    <div class="row">
+        <img class="loading3" src="{{ asset ('etecsa/imagenes/boyeros.png') }}" style="...">
+    </div></span>
+    <span style="position: absolute; top: 27px; left: -60px">
+    <div class="row">
+        <img class="loading3" src="{{ asset ('etecsa/imagenes/sanMiguel.png') }}" style="...">
+    </div></span>
+
+
+
+    <span style="position: absolute; top: 300px; left: 685px"><label class="text-blue-800"><i class="fa fa-map-marker" data-placement="top" title="Dirección: "></i> CT Monte</label></span></span>
+    {% set cantPM = 0 %}
+    {% for lugar in lugares %}
+        {% if lugar.idArea.id == 8 %}
+            {% if lugar.permisoSeguridads != null %}
+                {% set cantPM = lugar.permisoSeguridads | length %}
+                <span style="position: absolute; top: 280px; left: 720px"><label class="text-blue-800"><i class="fa fa-map-marker" data-placement="top" title="Cantidad Permiso: {{cantPM}} Dirección: {{ lugar.direccion }}"> {{ lugar.lugar }}</i></label></span>
+            {% else %}
+                <span style="position: absolute; top: 280px; left: 720px"><label class="text-blue-800"><i class="fa fa-map-marker" data-placement="top" title="Cantidad Permiso: 0 Dirección: {{ lugar.direccion }}">{{ lugar.lugar }}</i></label></span>
+            {% endif %}
+        {% endif %}
+    {% endfor %}
+
+    {% set cantPL = 0 %}
+    {% for lugar in lugares %}
+        {% if lugar.idArea.id == 7 %}
+            {% if lugar.permisoSeguridads != null %}
+                {% set cantPL = lugar.permisoSeguridads | length %}
+                <span style="position: absolute; top: 300px; left: 770px"><a class="fa fa-map-marker" data-placement="top" title="Cantidad Permiso: {{cantPL}} Dirección: {{ lugar.direccion }}">{{ lugar.lugar }}</a></label></span>
+            {% else %}
+                <span style="position: absolute; top: 300px; left: 770px"><label class="text-blue-800"><a class="fa fa-map-marker" data-placement="top" title="Cantidad Permiso: 0 Dirección: {{ lugar.direccion }}">{{ lugar.lugar }}</a></label></span>
+            {% endif %}
+        {% endif %}
+    {% endfor %}
+
+    {% set cantPCu = 0 %}
+    {% for lugar in lugares %}
+        {% if lugar.idArea.id == 6 %}
+            {% if lugar.permisoSeguridads != null %}
+                {% set cantPCu = lugar.permisoSeguridads | length %}
+                <span style="position: absolute; top: 400px; left: 930px"><label class="text-blue-800"><a class="fa fa-map-marker" data-placement="top" title="Cantidad Permiso: {{cantPCu}} Dirección: {{ lugar.direccion }}">{{ lugar.lugar }}</a></label></span>
+            {% else %}
+                <span style="position: absolute; top: 460px; left: 950px"><label class="text-blue-800"><a class="fa fa-map-marker" data-placement="top" title="Cantidad Permiso: 0 Dirección: {{ lugar.direccion }}">{{ lugar.lugar }}</a></label></span>
+            {% endif %}
+        {% endif %}
+    {% endfor %}
+
+    {% set cantPCo = 0 %}
+    {% for lugar in lugares %}
+        {% if lugar.idArea.id == 5 %}
+            {% if lugar.permisoSeguridads != null %}
+                {% set cantPCo = lugar.permisoSeguridads | length %}
+                <span style="position: absolute; top: 340px; left: 880px"><label class="text-blue-800"><a class="fa fa-map-marker" data-placement="top" title="Cantidad Permiso: {{cantPCo}} Dirección: {{ lugar.direccion }}">{{ lugar.lugar }}</a></label></span>
+            {% else %}
+                <span style="position: absolute; top: 300px; left: 815px"><label class="text-blue-800"><a class="fa fa-map-marker" data-placement="top" title="Cantidad Permiso: 0 Dirección: {{ lugar.direccion }}">{{ lugar.lugar }}</a></label></span>
+            {% endif %}
+        {% endif %}
+    {% endfor %}
+
+    {% set cantPB = 0 %}
+    {% for lugar in lugares %}
+        {% if lugar.idArea.id == 4 %}
+            {% if lugar.permisoSeguridads != null %}
+                {% set cantPB = lugar.permisoSeguridads | length %}
+                <span style="position: absolute; top: 500px; left: 650px"><label class="text-blue-800"><a class="fa fa-map-marker" data-placement="top" title="Cantidad Permiso: {{cantPB}} Dirección: {{ lugar.direccion }}">{{ lugar.lugar }}</a></label></span>
+            {% else %}
+                <span style="position: absolute; top: 400px; left: 690px"><label class="text-blue-800"><a class="fa fa-map-marker" data-placement="top" title="Cantidad Permiso: 0 Dirección: {{ lugar.direccion }}">{{ lugar.lugar }}</a></label></span>
+            {% endif %}
+        {% endif %}
+    {% endfor %}
+
+    {% set cantPA = 0 %}
+    {% for lugar in lugares %}
+        {% if lugar.idArea.id == 3 %}
+            {% if lugar.permisoSeguridads != null %}
+                {% set cantPA = lugar.permisoSeguridads | length %}
+                <span style="position: absolute; top: 430px; left: 850px"><label class="text-blue-800"><a class="fa fa-map-marker" data-placement="top" title="Cantidad Permiso: {{cantPA}} Dirección: {{ lugar.direccion }}">{{ lugar.lugar }}</a></label></span>
+            {% else %}
+                <span style="position: absolute; top: 350px; left: 800px"><label class="text-blue-800"><a class="fa fa-map-marker" data-placement="top" title="Cantidad Permiso: 0 Dirección: {{ lugar.direccion }}">{{ lugar.lugar }}</a></label></span>
+            {% endif %}
+        {% endif %}
+    {% endfor %}
+{% endblock %}

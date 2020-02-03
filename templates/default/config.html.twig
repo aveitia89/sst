@@ -1,0 +1,202 @@
+{% extends 'base.html.twig' %}
+
+{% block contenido %}
+
+    <div class="content">
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="hpanel">
+                    <div class="panel-heading">
+                        <h2>Salvar Base de datos</h2>
+                    </div>
+                    <div class="panel-body">
+                        <form name="simpleForm" novalidate id="simpleForm" action="#" method="post">
+                            <div id="step3" class="tab-pane">
+                                <div class="row m-t-lg m-b-lg">
+                                    <div class="col-lg-12 small m-t-md">
+                                        <br>
+                                        <p class="text-center">
+                                            <i class="madi mdi-database mdi mdi-database-plus fa fa-2x"></i> Mantenga su
+                                            <strong>base de datos</strong> a salvo.
+                                            <br>
+                                            <strong>Lugar de ubicación: </strong> "/myphp-backup"
+                                            <br>
+                                            <strong>Exportación: </strong> "Salva solo los datos y esquema"
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="text-right m-t-xs">
+                                    <a class="btn btn-success backup">Salvar</a>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="hpanel">
+                    <div class="panel-heading">
+                        <h2>Restaurar Base de datos</h2>
+                    </div>
+                    <div class="panel-body">
+                        <form name="simpleForm2" novalidate id="simpleForm" action="#" method="post">
+                            <div id="step3" class="tab-pane">
+                                <div class="row m-t-lg m-b-lg">
+                                    <div class="col-lg-12 small m-t-md">
+                                        <br>
+                                        <div class="form-group col-lg-9" style="text-align: center">
+                                            <label>Cargar salva realizadas</label>
+                                            <select class="form-control" name="restorePoint" id="restorePoint"
+                                                    required="required">
+                                                <option value="">Seleccionar</option>
+                                                {% for restaurar in array %}
+                                                    <option style="text-align: center"
+                                                            value="{{ restaurar.ruta_completa }}">{{ restaurar.nombrearchivo }}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="text-right m-t-xs">
+                                    <a class="btn btn-warning restaura">Restaurar</a>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr>
+{% endblock %}
+{% block javascripts %}
+    <script>
+        $(function () {
+                $('.next').click(function () {
+                    var nextId = $(this).parents('.tab-pane').next().attr("id");
+                    $('[href=#' + nextId + ']').tab('show');
+                })
+
+                $('.prev').click(function () {
+                    var prevId = $(this).parents('.tab-pane').prev().attr("id");
+                    $('[href=#' + prevId + ']').tab('show');
+                })
+
+                $('.backup').click(function () {
+
+                    // Serialize data to post method
+                    var datastring = $("#simpleForm").serialize();
+                    // Show notification
+                    var path = '{{ path('backup') }}';
+                    swal({
+                            title: "Alerta!",
+                            text: "Tenga en cuenta que debe mantener la base de datos en un lugar seguro!",
+                            type: "warning",
+                            closeOnConfirm: true,
+                            confirmButtonText: "Aceptar",
+                        }, function (isConfirm) {
+                            if (isConfirm) {
+                                $.ajax({
+                                    type: "POST",
+                                    url: path,
+                                    data: datastring,
+                                    success: function (data) {
+                                        swal({
+                                            title: "OK!",
+                                            text: "Base de datos salvada satisfactoriamente",
+                                            showConfirmButton: true,
+                                            confirmButtonText: "Aceptar",
+                                            type: "success",
+                                            showCancelButton: false,
+                                            closeOnConfirm: true,
+                                        });
+                                    },
+                                    error: function (xhr, status) {
+                                        swal({
+                                            title: "OK!",
+                                            text: "Error",
+                                            type: "danger",
+                                            closeOnConfirm: true,
+                                            confirmButtonText: "Aceptar",
+                                        });
+                                    },
+                                    complete: function (xhr, status) {
+                                        swal({
+                                            position: 'top-end',
+                                            icon: 'success',
+                                            title: 'Base de datos salvada satisfactoriamente',
+                                            showConfirmButton: true,
+                                            confirmButtonText: "Aceptar",
+                                            type: "success",
+                                            showCancelButton: false,
+                                            closeOnConfirm: true
+                                        });
+                                    }
+                                });
+                            }
+                        }
+                    );
+
+                })
+                $('.restaura').click(function () {
+
+                    // Serialize data to post method
+                    //var datastring = $("#simpleForm2").serialize();
+                    var restorePoint = document.getElementById("restorePoint").value;
+                    //alert(restorePoint);
+                    var path = '{{ path('restaura',{'ruta':'xx'}) }}';
+                    path = path.replace("xx", restorePoint);
+                    swal({
+                            title: "Alerta!",
+                            text: "Desea restaurar la Base de Datos seleccionada",
+                            type: "warning",
+                            closeOnConfirm: true,
+                            confirmButtonText: "Aceptar",
+                        }, function (isConfirm) {
+                            if (isConfirm) {
+                                $.ajax({
+                                    type: "POST",
+                                    url: path,
+                                    data: "",
+                                    success: function (data) {
+                                        swal({
+                                            title: "OK!",
+                                            text: "La Base de Datos se ha restaurado correctamente",
+                                            showConfirmButton: true,
+                                            confirmButtonText: "Aceptar",
+                                            type: "success",
+                                            showCancelButton: false,
+                                            closeOnConfirm: true,
+                                        });
+                                    },
+                                    error: function (xhr, status) {
+                                        swal({
+                                            title: "OK!",
+                                            text: "Error",
+                                            type: "danger",
+                                            closeOnConfirm: true,
+                                            confirmButtonText: "Aceptar",
+                                        });
+                                    },
+                                    complete: function (xhr, status) {
+                                        swal({
+                                            position: 'top-end',
+                                            icon: 'success',
+                                            title: 'La Base de Datos se ha restaurado correctamente',
+                                            showConfirmButton: true,
+                                            confirmButtonText: "Aceptar",
+                                            type: "success",
+                                            showCancelButton: false,
+                                            closeOnConfirm: true
+                                        });
+                                    }
+                                });
+                            }
+                        }
+                    );
+
+                })
+            }
+        );
+    </script>
+{% endblock %}
