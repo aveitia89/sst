@@ -1,0 +1,5 @@
+{
+    "stable": [{"path": "/download/1.9.3/composer.phar", "version": "1.9.3", "min-php": 50300}],
+    "preview": [{"path": "/download/1.9.3/composer.phar", "version": "1.9.3", "min-php": 50300}],
+    "snapshot": [{"path": "/composer.phar", "version": "02433c3659bcdd92758094f5dcdeb951db044979", "min-php": 50300}]
+}
